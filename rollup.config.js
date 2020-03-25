@@ -8,13 +8,10 @@ import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
-//const { injectManifest  } = require('rollup-plugin-workbox');	// using {} defines this as a function
-
-//import injectManifest from 'rollup-plugin-workbox';
 
 const gulp = require('gulp');
 const workboxBuild = require('workbox-build');
-// TODO - add "service worker" task here
+// add "service worker" task here
 const serviceWorker = () => {
 	return workboxBuild.injectManifest({
 	  swSrc: 'src/sw.js',
