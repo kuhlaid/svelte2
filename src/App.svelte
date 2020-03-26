@@ -20,9 +20,10 @@ March 24, 2020 - wpg
 	];
 	let selected = options[0];
 
-	// the changeComponent function changes the selected component (the event.originalTarget.id would probably if we were using the a different element)
+	// the changeComponent function changes the selected component (the event.originalTarget.id is not accessible in Chrome so switched to event.srcElement.id)
 	function changeComponent(event) {
-		selected = options[event.originalTarget.id];
+		//console.log(event);
+		selected = options[event.srcElement.id];
 	}
 </script>
 
