@@ -1,5 +1,9 @@
-March 25, 2020 - wpg
-- starting a fresh Svelte app using:
+March 26, 2020
+- released version 0.1
+- beginning to run PWA audits and add in placeholders for missing PWA pieces
+
+March 25, 2020
+- I started building this Svelte app using some of the following comands to copy a basic Svelte template and the modules I would use to develop the app:
 npx degit sveltejs/template svelte2
 cd svelte2
 npm install

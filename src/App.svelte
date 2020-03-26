@@ -25,6 +25,30 @@ March 24, 2020 - wpg
 		selected = options[event.originalTarget.id];
 	}
 </script>
+
+<!-- PWA stuff starts ================================ -->
+<!-- Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Chrome for Android theme color -->
+<meta name="theme-color" content="#90a8b2">
+
+<!-- Add to homescreen for Chrome on Android -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="PSK">
+<link rel="icon" sizes="192x192" href="images/touch/icon-192x192.png">
+
+<!-- Add to homescreen for Safari on iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Polymer Starter Kit">
+<link rel="apple-touch-icon" href="images/touch/icon-192x192.png">
+
+<!-- Tile for Win8 -->
+<meta name="msapplication-TileColor" content="#90a8b2">
+<meta name="msapplication-TileImage" content="images/touch/icon-192x192.png">
+<!-- PWA stuff ends ================================ -->
+
 <link rel='stylesheet' href='vendor/bootstrap/css/bootstrap.min.css'>
 
 <div class="container">
