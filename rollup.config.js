@@ -70,7 +70,7 @@ export default {
 			},
 			{ 
                 src: 'src/images/*', 
-                dest: 'public/images/' 
+                dest: 'public/images/'
 			}
 		]
 		}),
