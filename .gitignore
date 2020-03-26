@@ -1,5 +1,6 @@
 node_modules/
 pubic/build/
+public
 .DS_Store
 public/build/bundle.css
 public/build/bundle.css.map
