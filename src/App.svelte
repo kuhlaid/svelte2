@@ -8,9 +8,6 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
-	// adding Smelte button
-	//import "smelte/src/tailwind.css";
-
 	import Visits from './Visits.svelte';
 	import Articles from  './Articles.svelte';
 	import Drawer from './Drawer.svelte';
@@ -23,19 +20,12 @@ March 24, 2020 - wpg
 	];
 	let selected = options[0];
 
+	// the changeComponent function changes the selected component (the event.originalTarget.id would probably if we were using the a different element)
 	function changeComponent(event) {
-		// change the selected component
-		selected = options[event.originalTarget.attributes.id.nodeValue];
+		selected = options[event.originalTarget.id];
 	}
 </script>
 <link rel='stylesheet' href='vendor/bootstrap/css/bootstrap.min.css'>
-<!-- Page selector using form element
-<select bind:value={selected} multiple=1>
-	{#each options as option}
-		<option value={option}>{option.page}</option>
-	{/each}
-</select>
- -->
 
 <div class="container">
  <!-- component selector using normal html element could be used in connection with bootstrap.
@@ -47,21 +37,10 @@ March 24, 2020 - wpg
 </div> 
 
   <div class="row">
-    <div class="col-sm-4">
-      <h3>Column 1</h3>
-      <p>Lorem ipsum dolor..</p>
-    </div>
-    <div class="col-sm-4">
-      <h3>Column 2</h3>
-      <p>Lorem ipsum dolor..</p>
-    </div>
-    <div class="col-sm-4">
-      <h3>Column 3</h3>
-      <p>Lorem ipsum dolor..</p>
-    </div>
-  </div>
-  <div class="row">
-	<!-- this is where our main content is placed -->
+    <div class="col-sm-12">
+      <h3>{selected.page}</h3>
+      <!-- this is where our main content is placed -->
 	<svelte:component this={selected.component}/>
+    </div>
   </div>
 </div>
