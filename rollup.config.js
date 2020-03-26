@@ -53,12 +53,18 @@ export default {
 			}
 		}),
 
-		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our public directory
+		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
+		// as well as copy the service worker ****
 		copy({
             targets: [{ 
                 src: 'node_modules/bootstrap/dist/**/*', 
                 dest: 'public/vendor/bootstrap' 
-            }]
+			},
+			{ 
+                src: 'src/sw.js', 
+                dest: 'public/' 
+			}
+		]
 		}),
 		
 		// If you have external dependencies installed from
