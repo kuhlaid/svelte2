@@ -64,6 +64,11 @@ export default {
                 src: 'src/sw.js', 
                 dest: 'public/' 
 			}
+			,
+			{ 
+                src: 'src/manifest.json', 
+                dest: 'public/' 
+			}
 		]
 		}),
 		
