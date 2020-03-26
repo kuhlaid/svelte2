@@ -9,6 +9,7 @@
   "start_url": "index.html",
   "display": "standalone",
   "theme_color": "#90a8b2",
+  "background-color": "white",
   "icons": [
     {
       "src": "images/touch/icon-128x128.png",
