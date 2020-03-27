@@ -4,29 +4,32 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 
+// trying to cache
+import workbox from 'rollup-plugin-workbox-build'
+ 
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
-const workboxBuild = require('workbox-build');
+// const workboxBuild = require('workbox-build');
 
-// NOTE: This should be run *AFTER* all your assets are built
-const buildSW = () => {
-  // This will return a Promise
-  return workboxBuild.injectManifest({
-    swSrc: 'src/sw.js',
-	  swDest: 'public/sw.js',
-	  globDirectory: 'public',
-	  globPatterns: [
-		'**/*.{html,json,js,css.png}'
-	  ]
-  }).then(({count, size, warnings}) => {
-    // Optionally, log any warnings and details.
-    warnings.forEach(console.warn);
-    console.log(`${count} files will be precached, totaling ${size} bytes.`);
-  });
-}
+// // NOTE: This should be run *AFTER* all your assets are built
+// const buildSW = () => {
+//   // This will return a Promise
+//   return workboxBuild.injectManifest({
+//     swSrc: 'src/sw.js',
+// 	  swDest: 'public/sw.js',
+// 	  globDirectory: 'public',
+// 	  globPatterns: [
+// 		'**/*.{html,json,js,css.png}'
+// 	  ]
+//   }).then(({count, size, warnings}) => {
+//     // Optionally, log any warnings and details.
+//     warnings.forEach(console.warn);
+//     console.log(`${count} files will be precached, totaling ${size} bytes.`);
+//   });
+// }
 
 export default {
 	input: 'src/main.js',
@@ -69,6 +72,15 @@ export default {
 		]
 		}),
 		
+		workbox({
+			mode: 'injectManifest', // or 'injectManifest'
+			options: {
+				swSrc: 'src/sw.js',
+				swDest: 'public/sw.js',
+				globDirectory: 'public',
+			},
+		  }),
+
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -90,7 +102,7 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser() && buildSW()
+		production && terser()
 	],
 	watch: {
 		clearScreen: false
