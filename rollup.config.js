@@ -37,15 +37,15 @@ const production = !process.env.ROLLUP_WATCH;
 
 const {injectManifest} = require('workbox-build');
 
-const swSrc = 'src/sw.js';
-const swDest = 'public/sw.js';
-injectManifest({
-  swSrc,
-  swDest,
-  // Other configuration options...
-}).then(({count, size}) => {
-  console.log(`Generated ${swDest}, which will precache ${count} files, totaling ${size} bytes.`);
-});
+// const swSrc = 'src/sw.js';
+// const swDest = 'public/sw.js';
+// injectManifest({
+//   swSrc,
+//   swDest,
+//   // Other configuration options...
+// }).then(({count, size}) => {
+//   console.log(`Generated ${swDest}, which will precache ${count} files, totaling ${size} bytes.`);
+// });
 
 export default {
 	input: 'src/main.js',
@@ -89,11 +89,14 @@ export default {
 		}),
 		
 		// cache 2
-		// injectManifest({
-		// 	swSrc: 'src/sw.js',
-		// 	swDest: 'public/sw.js',
-		// 	globDirectory: 'public'
-		//   }),
+		injectManifest({
+			swSrc: 'src/sw.js',
+			swDest: 'public/sw.js',
+			globDirectory: 'public',
+			globPatterns: [
+			'**/*.{html,json,js,css.png}'
+			]
+		  }),
 		
 		// cache 1 works but needs work
 		// workbox({
