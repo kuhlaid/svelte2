@@ -17,9 +17,7 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox
 
 if (workbox) {
     console.log(`Yay! Workbox is loaded 🎉`);
-    //workbox.precaching.precacheAndRoute([]);
-    precacheAndRoute(self.__WB_MANIFEST);
-
+    workbox.precaching.precacheAndRoute([]);
 
     const showNotification = () => {
         self.registration.showNotification('Background sync success!', {

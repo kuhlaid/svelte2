@@ -10,6 +10,8 @@ import { terser } from 'rollup-plugin-terser';
 // cache 2 which should work better
 //const { injectManifest } = require('rollup-plugin-workbox');
  
+// cache 3
+const workboxBuild = require('workbox-build');
  
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
@@ -89,14 +91,14 @@ export default {
 		}),
 		
 		// cache 2
-		injectManifest({
-			swSrc: 'src/sw.js',
-			swDest: 'public/sw.js',
-			globDirectory: 'public',
-			globPatterns: [
-			'**/*.{html,json,js,css.png}'
-			]
-		  }),
+		// injectManifest({
+		// 	swSrc: 'src/sw.js',
+		// 	swDest: 'public/sw.js',
+		// 	globDirectory: 'public',
+		// 	globPatterns: [
+		// 	'**/*.{html,json,js,css.png}'
+		// 	]
+		//   }),
 		
 		// cache 1 works but needs work
 		// workbox({
@@ -110,6 +112,16 @@ export default {
 		// 		]
 		// 	},
 		//   }),
+
+		// cache 3
+		workboxBuild.injectManifest({
+			    swSrc: 'src/sw.js',
+				  swDest: 'public/sw.js',
+				  globDirectory: 'public',
+				  globPatterns: [
+					'**/*.{html,json,js,css.png}'
+				  ]
+			  }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
