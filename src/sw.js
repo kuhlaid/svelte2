@@ -15,10 +15,6 @@ limitations under the License.
 */
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js');
 
-// testing caching of files
-import {precacheAndRoute} from 'workbox-precaching';
-precacheAndRoute(self.__WB_MANIFEST);
-
 if (workbox) {
     console.log(`Yay! Workbox is loaded 🎉`);
     workbox.precaching.precacheAndRoute([]);
