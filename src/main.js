@@ -45,7 +45,7 @@ Notification.requestPermission();	// add a application notification prompt for t
   window.addEventListener('load', function() {
       if ('serviceWorker' in navigator &&
           (window.location.protocol === 'https:' || isLocalhost)) {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('sw.js')
         .then(function(registration) {
           console.log('Service Worker seems to be registered!');
           // updatefound is fired if service-worker.js changes.
