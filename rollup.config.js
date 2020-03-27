@@ -70,6 +70,7 @@ export default {
 
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
 		// as well as copy the service worker, manifest, and images
+		// cache 1 works but needs work
 		copy({
             targets: [{ 
                 src: 'node_modules/bootstrap/dist/**/*', 
@@ -88,7 +89,14 @@ export default {
                 dest: 'public/images/'
 			}
 		]
-		}),
+		}).workbox({
+			mode: 'injectManifest',
+			options: {
+				swSrc: 'src/sw.js',
+				swDest: 'public/sw.js',
+				globDirectory: 'public'
+			}
+			}),
 		
 		// cache 2
 		// injectManifest({
@@ -131,17 +139,10 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser(),
+		production && terser()
 
-		// cache 1 works but needs work
-		workbox({
-			mode: 'injectManifest',
-			options: {
-				swSrc: 'src/sw.js',
-				swDest: 'public/sw.js',
-				globDirectory: 'public'
-			}
-			})
+		
+		
 	],
 	watch: {
 		clearScreen: false
