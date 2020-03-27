@@ -8,7 +8,7 @@ import { terser } from 'rollup-plugin-terser';
 //import workbox from 'rollup-plugin-workbox-build'
 
 // cache 2 which should work better
-const { injectManifest } = require('rollup-plugin-workbox');
+//const { injectManifest } = require('rollup-plugin-workbox');
  
  
 // wpg - used to copy the bootstrap installed via NPM to our public folder
@@ -34,6 +34,18 @@ const production = !process.env.ROLLUP_WATCH;
 //     console.log(`${count} files will be precached, totaling ${size} bytes.`);
 //   });
 // }
+
+const {injectManifest} = require('workbox-build');
+
+const swSrc = 'src/sw.js';
+const swDest = 'public/sw.js';
+injectManifest({
+  swSrc,
+  swDest,
+  // Other configuration options...
+}).then(({count, size}) => {
+  console.log(`Generated ${swDest}, which will precache ${count} files, totaling ${size} bytes.`);
+});
 
 export default {
 	input: 'src/main.js',
@@ -77,11 +89,11 @@ export default {
 		}),
 		
 		// cache 2
-		injectManifest({
-			swSrc: 'src/sw.js',
-			swDest: 'public/sw.js',
-			globDirectory: 'public'
-		  }),
+		// injectManifest({
+		// 	swSrc: 'src/sw.js',
+		// 	swDest: 'public/sw.js',
+		// 	globDirectory: 'public'
+		//   }),
 		
 		// cache 1 works but needs work
 		// workbox({
