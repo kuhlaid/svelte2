@@ -11,6 +11,26 @@ import workbox from 'rollup-plugin-workbox-inject';
 
 const production = !process.env.ROLLUP_WATCH;
 
+
+const workboxBuild = require('workbox-build');
+
+// NOTE: This should be run *AFTER* all your assets are built
+const buildSW = () => {
+  // This will return a Promise
+  return workboxBuild.injectManifest({
+    swSrc: 'src/sw.js',
+	  swDest: 'public/sw.js',
+	  globDirectory: 'public',
+	  globPatterns: [
+		'**/*.{html,json,js,css.png}'
+	  ]
+  }).then(({count, size, warnings}) => {
+    // Optionally, log any warnings and details.
+    warnings.forEach(console.warn);
+    console.log(`${count} files will be precached, totaling ${size} bytes.`);
+  });
+}
+
 export default {
 	input: 'src/main.js',
 	output: {
@@ -29,16 +49,6 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
-
-		// trying to precache files
-		workbox({
-			swSrc: 'src/sw.js',
-			swDest: 'public/sw.js',
-			globDirectory: 'public',
-			globPatterns: [
-				'**/*.{html,json,js,css}'
-			]
-		  }),
 
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
 		// as well as copy the service worker, manifest, and images
@@ -83,36 +93,13 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser() && buildSW()
 	],
 	watch: {
 		clearScreen: false
 	}
 };
 
-// not sure if this will work
-// const gulp = require('gulp');
-// const workboxBuild = require('workbox-build');
-// // add "service worker" task here
-// const serviceWorker = () => {
-// 	console.log('init sw workboxBuild');
-// 	return workboxBuild.injectManifest({
-// 	  swSrc: 'src/sw.js',
-// 	  swDest: 'public/sw.js',
-// 	  globDirectory: 'public',
-// 	  globPatterns: [
-// 		'**/*.{html,json,js,css}'
-// 	  ]
-// 	}).then(resources => {
-// 	  console.log(`Injected ${resources.count} resources for precaching, ` +
-// 		  `totaling ${resources.size} bytes.`);
-// 	}).catch(err => {
-// 	  console.log('Uh oh 😬', err);
-// 	});
-// }
-// gulp.task('service-worker', serviceWorker);
-// const build = gulp.series('service-worker');
-// gulp.task('build', build);
 
 function serve() {
 	let started = false;
