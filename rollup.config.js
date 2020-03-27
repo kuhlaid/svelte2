@@ -9,28 +9,6 @@ import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
-const gulp = require('gulp');
-const workboxBuild = require('workbox-build');
-// add "service worker" task here
-const serviceWorker = () => {
-	console.log('init sw workboxBuild');
-	return workboxBuild.injectManifest({
-	  swSrc: 'src/sw.js',
-	  swDest: 'public/sw.js',
-	  globDirectory: 'public',
-	  globPatterns: [
-		'**/*.{html,json,js,css}'
-	  ]
-	}).then(resources => {
-	  console.log(`Injected ${resources.count} resources for precaching, ` +
-		  `totaling ${resources.size} bytes.`);
-	}).catch(err => {
-	  console.log('Uh oh 😬', err);
-	});
-  }
-  gulp.task('service-worker', serviceWorker);
-
-
 export default {
 	input: 'src/main.js',
 	output: {
