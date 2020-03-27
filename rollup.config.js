@@ -76,11 +76,12 @@ export default {
 		]
 		}),
 		
+		// cache 2
 		injectManifest({
 			swSrc: 'src/sw.js',
 			swDest: 'public/sw.js',
 			globDirectory: 'public'
-		  })
+		  }),
 		
 		// cache 1 works but needs work
 		// workbox({
