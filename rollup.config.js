@@ -7,10 +7,7 @@ import { terser } from 'rollup-plugin-terser';
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
 
-import workbox from 'rollup-plugin-workbox-inject';
-
 const production = !process.env.ROLLUP_WATCH;
-
 
 const workboxBuild = require('workbox-build');
 
