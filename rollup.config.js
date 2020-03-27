@@ -71,7 +71,7 @@ export default {
 				swDest: 'public/sw.js',
 				globDirectory: 'public',
 				globPatterns: [
-				'**/*.{html,json,js,css.png}',
+				'**/*.{html,json,js,css,png}',
 				'./manifest.json',
 				'./images/**'
 				]
