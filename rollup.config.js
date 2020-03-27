@@ -13,17 +13,13 @@ const gulp = require('gulp');
 const workboxBuild = require('workbox-build');
 // add "service worker" task here
 const serviceWorker = () => {
+	console.log('init sw workboxBuild');
 	return workboxBuild.injectManifest({
 	  swSrc: 'src/sw.js',
 	  swDest: 'public/sw.js',
 	  globDirectory: 'public',
 	  globPatterns: [
-		'style/main.css',
-		'index.html',
-		'js/idb-promised.js',
-		'js/main.js',
-		'images/**/*.*',
-		'manifest.json'
+		'**/*.{html,json,js,css}'
 	  ]
 	}).then(resources => {
 	  console.log(`Injected ${resources.count} resources for precaching, ` +
@@ -33,6 +29,7 @@ const serviceWorker = () => {
 	});
   }
   gulp.task('service-worker', serviceWorker);
+
 
 export default {
 	input: 'src/main.js',
