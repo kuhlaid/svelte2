@@ -7,6 +7,8 @@ import { terser } from 'rollup-plugin-terser';
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
 
+import workbox from 'rollup-plugin-workbox-inject';
+
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
@@ -27,6 +29,16 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
+
+		// trying to precache files
+		workbox({
+			swSrc: 'src/sw.js',
+			swDest: 'public/sw.js',
+			globDirectory: 'public',
+			globPatterns: [
+				'**/*.{html,json,js,css}'
+			]
+		  }),
 
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
 		// as well as copy the service worker, manifest, and images
@@ -78,26 +90,29 @@ export default {
 	}
 };
 
-const gulp = require('gulp');
-const workboxBuild = require('workbox-build');
-// add "service worker" task here
-const serviceWorker = () => {
-	console.log('init sw workboxBuild');
-	return workboxBuild.injectManifest({
-	  swSrc: 'src/sw.js',
-	  swDest: 'public/sw.js',
-	  globDirectory: 'public',
-	  globPatterns: [
-		'**/*.{html,json,js,css}'
-	  ]
-	}).then(resources => {
-	  console.log(`Injected ${resources.count} resources for precaching, ` +
-		  `totaling ${resources.size} bytes.`);
-	}).catch(err => {
-	  console.log('Uh oh 😬', err);
-	});
-}
-gulp.task('service-worker', serviceWorker);
+// not sure if this will work
+// const gulp = require('gulp');
+// const workboxBuild = require('workbox-build');
+// // add "service worker" task here
+// const serviceWorker = () => {
+// 	console.log('init sw workboxBuild');
+// 	return workboxBuild.injectManifest({
+// 	  swSrc: 'src/sw.js',
+// 	  swDest: 'public/sw.js',
+// 	  globDirectory: 'public',
+// 	  globPatterns: [
+// 		'**/*.{html,json,js,css}'
+// 	  ]
+// 	}).then(resources => {
+// 	  console.log(`Injected ${resources.count} resources for precaching, ` +
+// 		  `totaling ${resources.size} bytes.`);
+// 	}).catch(err => {
+// 	  console.log('Uh oh 😬', err);
+// 	});
+// }
+// gulp.task('service-worker', serviceWorker);
+// const build = gulp.series('service-worker');
+// gulp.task('build', build);
 
 function serve() {
 	let started = false;
