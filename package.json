@@ -1,6 +1,8 @@
 {
   "name": "svelte2",
   "version": "1.0.0",
+  "repository": "https://github.com/kuhlaid/svelte2",
+  "license": "MIT License",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",

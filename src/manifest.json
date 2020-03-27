@@ -8,8 +8,6 @@
   "lang": "en-US",
   "start_url": "index.html",
   "display": "standalone",
-  "repository": "https://github.com/kuhlaid/svelte2",
-  "license": "MIT License",
   "theme_color": "#90a8b2",
   "background_color": "#90a8b2",
   "icons": [
