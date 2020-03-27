@@ -4,50 +4,13 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 
-// cache 1 sort of works
+// cache files offline
 import workbox from 'rollup-plugin-workbox-build'
 
-// cache 2 which should work better
-//const { injectManifest } = require('rollup-plugin-workbox');
- 
-// cache 3
-//const workboxBuild = require('workbox-build');
- 
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
-
-// const workboxBuild = require('workbox-build');
-
-// // NOTE: This should be run *AFTER* all your assets are built
-// const buildSW = () => {
-//   // This will return a Promise
-//   return workboxBuild.injectManifest({
-//     swSrc: 'src/sw.js',
-// 	  swDest: 'public/sw.js',
-// 	  globDirectory: 'public',
-// 	  globPatterns: [
-// 		'**/*.{html,json,js,css.png}'
-// 	  ]
-//   }).then(({count, size, warnings}) => {
-//     // Optionally, log any warnings and details.
-//     warnings.forEach(console.warn);
-//     console.log(`${count} files will be precached, totaling ${size} bytes.`);
-//   });
-// }
-
-//const {injectManifest} = require('workbox-build');
-
-// const swSrc = 'src/sw.js';
-// const swDest = 'public/sw.js';
-// injectManifest({
-//   swSrc,
-//   swDest,
-//   // Other configuration options...
-// }).then(({count, size}) => {
-//   console.log(`Generated ${swDest}, which will precache ${count} files, totaling ${size} bytes.`);
-// });
 
 export default {
 	input: 'src/main.js',
@@ -70,7 +33,6 @@ export default {
 
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
 		// as well as copy the service worker, manifest, and images
-		// cache 1 works but needs work
 		copy({
             targets: [{ 
                 src: 'node_modules/bootstrap/dist/**/*', 
@@ -88,36 +50,9 @@ export default {
                 src: 'src/images/*', 
                 dest: 'public/images/'
 			}
-		]
-		}).workbox({
-			mode: 'injectManifest',
-			options: {
-				swSrc: 'src/sw.js',
-				swDest: 'public/sw.js',
-				globDirectory: 'public'
-			}
-			}),
+			]
+		}),
 		
-		// cache 2
-		// injectManifest({
-		// 	swSrc: 'src/sw.js',
-		// 	swDest: 'public/sw.js',
-		// 	globDirectory: 'public',
-		// 	globPatterns: [
-		// 	'**/*.{html,json,js,css.png}'
-		// 	]
-		//   }),
-
-		// cache 3
-		// workboxBuild.injectManifest({
-		// 	    swSrc: 'src/sw.js',
-		// 		  swDest: 'public/sw.js',
-		// 		  globDirectory: 'public',
-		// 		  globPatterns: [
-		// 			'**/*.{html,json,js,css.png}'
-		// 		  ]
-		// 	  }),
-
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -128,7 +63,20 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
-
+		// cache files
+		workbox({
+			mode: 'injectManifest',
+			options: {
+				swSrc: 'src/sw.js',
+				swDest: 'public/sw.js',
+				globDirectory: 'public',
+				globPatterns: [
+				'**/*.{html,json,js,css.png}',
+				'./manifest.json',
+				'./images/**'
+				]
+			}
+			}),
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),
