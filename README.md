@@ -4,7 +4,9 @@ The easiest thing to start using this code is simply fork it to your personal Gi
 ## Change log
 
 March 27, 2020
-- running PWA audits and trying to get the service worker registered in Firefox
+- released version 0.1.2
+- running PWA audits in Lighthouse and finally getting a green light
+- gave up on trying to get the service worker registered in Firefox since it seems to simply ignore that a service working is trying to be installed (from what I have read there are issues outstanding regarding permission settings set my users being incompatible with service workers)
 
 March 26, 2020
 - released version 0.1
@@ -22,4 +24,4 @@ npm install workbox-sw
 npm install gulp
 npm install workbox-build
 npm install rollup-plugin-workbox-build
-``
+```
