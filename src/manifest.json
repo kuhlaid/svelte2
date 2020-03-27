@@ -1,15 +1,17 @@
 {
-  "manifest_version": "0.1.1",
+  "manifest_version": "0.1",
   "name": "kuhlaid / svelte2",
-  "version" : "0.1.1",
+  "version" : "0.1",
   "default_locale": "en",
   "description": "Svelte example (not Svelte version 2) with basic Bootstrap styling and navigation to give a 'multi-page' feel. Repository found at https://github.com/kuhlaid/svelte2.",
   "short_name": "svelte2",
   "lang": "en-US",
   "start_url": "index.html",
   "display": "standalone",
+  "repository": "https://github.com/kuhlaid/svelte2",
+  "license": "MIT License",
   "theme_color": "#90a8b2",
-  "background-color": "#90a8b2",
+  "background_color": "#90a8b2",
   "icons": [
     {
       "src": "images/touch/icon-128x128.png",
