@@ -47,6 +47,7 @@ Notification.requestPermission();	// add a application notification prompt for t
           (window.location.protocol === 'https:' || isLocalhost)) {
         navigator.serviceWorker.register('./sw.js')
         .then(function(registration) {
+          console.log('Service Worker seems to be registered!');
           // updatefound is fired if service-worker.js changes.
           registration.onupdatefound = function() {
             // updatefound is also fired the very first time the SW is installed,
@@ -64,6 +65,7 @@ Notification.requestPermission();	// add a application notification prompt for t
                     // fresh content will have been added to the cache.
                     // It's the perfect time to display a "New content is
                     // available; please refresh." message in the page's interface.
+                    console.log('Service Worker installed');
                     break;
 
                   case 'redundant':
