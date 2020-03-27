@@ -32,7 +32,11 @@ export default {
 		}),
 
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
-		// as well as copy the service worker, manifest, and images
+		// as well as copy the service worker, manifest, idb handler, and images
+		// { 
+		// 	src: 'src/idb-promised.js', 
+		// 	dest: 'public/' 
+		// },
 		copy({
             targets: [{ 
                 src: 'node_modules/bootstrap/dist/**/*', 
@@ -73,7 +77,8 @@ export default {
 				globPatterns: [
 				'**/*.{html,json,js,css,png}',
 				'./manifest.json',
-				'./images/**'
+				'./images/**',
+				'./index.html'
 				]
 			}
 			}),
