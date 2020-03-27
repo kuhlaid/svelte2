@@ -99,16 +99,6 @@ export default {
 		// 	'**/*.{html,json,js,css.png}'
 		// 	]
 		//   }),
-		
-		// cache 1 works but needs work
-		workbox({
-			mode: 'injectManifest',
-			options: {
-				swSrc: 'src/sw.js',
-				swDest: 'public/sw.js',
-				globDirectory: 'public'
-			}
-		  }),
 
 		// cache 3
 		// workboxBuild.injectManifest({
@@ -141,7 +131,17 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser(),
+
+		// cache 1 works but needs work
+		workbox({
+			mode: 'injectManifest',
+			options: {
+				swSrc: 'src/sw.js',
+				swDest: 'public/sw.js',
+				globDirectory: 'public'
+			}
+			})
 	],
 	watch: {
 		clearScreen: false
