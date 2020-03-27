@@ -5,13 +5,13 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 
 // cache 1 sort of works
-//import workbox from 'rollup-plugin-workbox-build'
+import workbox from 'rollup-plugin-workbox-build'
 
 // cache 2 which should work better
 //const { injectManifest } = require('rollup-plugin-workbox');
  
 // cache 3
-const workboxBuild = require('workbox-build');
+//const workboxBuild = require('workbox-build');
  
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
@@ -37,7 +37,7 @@ const production = !process.env.ROLLUP_WATCH;
 //   });
 // }
 
-const {injectManifest} = require('workbox-build');
+//const {injectManifest} = require('workbox-build');
 
 // const swSrc = 'src/sw.js';
 // const swDest = 'public/sw.js';
@@ -101,27 +101,24 @@ export default {
 		//   }),
 		
 		// cache 1 works but needs work
-		// workbox({
-		// 	mode: 'injectManifest',
-		// 	options: {
-		// 		swSrc: 'src/sw.js',
-		// 		swDest: 'public/sw.js',
-		// 		globDirectory: 'public',
-		// 		globPatterns: [
-		// 		'**/*.{html,json,js,css.png}'
-		// 		]
-		// 	},
-		//   }),
+		workbox({
+			mode: 'injectManifest',
+			options: {
+				swSrc: 'src/sw.js',
+				swDest: 'public/sw.js',
+				globDirectory: 'public'
+			}
+		  }),
 
 		// cache 3
-		workboxBuild.injectManifest({
-			    swSrc: 'src/sw.js',
-				  swDest: 'public/sw.js',
-				  globDirectory: 'public',
-				  globPatterns: [
-					'**/*.{html,json,js,css.png}'
-				  ]
-			  }),
+		// workboxBuild.injectManifest({
+		// 	    swSrc: 'src/sw.js',
+		// 		  swDest: 'public/sw.js',
+		// 		  globDirectory: 'public',
+		// 		  globPatterns: [
+		// 			'**/*.{html,json,js,css.png}'
+		// 		  ]
+		// 	  }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
