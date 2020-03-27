@@ -78,6 +78,9 @@ export default {
 				swSrc: 'src/sw.js',
 				swDest: 'public/sw.js',
 				globDirectory: 'public',
+				globPatterns: [
+				'**/*.{html,json,js,css.png}'
+				]
 			},
 		  }),
 
