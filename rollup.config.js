@@ -39,11 +39,11 @@ export default {
 		// },
 		copy({
             targets: [{ 
-                src: 'node_modules/bootstrap/dist/**/*', 
-                dest: 'public/vendor/bootstrap' 
+                src: 'node_modules/bootstrap/dist/css/bootstrap.min.css', 
+                dest: 'public/vendor/bootstrap/css/bootstrap.min.css' 
 			},
 			{ 
-                src: 'src/sw.js', 
+                src: 'src/sw.js',
                 dest: 'public/' 
 			},
 			{ 
@@ -78,6 +78,7 @@ export default {
 				'**/*.{html,json,js,css,png,map}',
 				'./manifest.json',
 				'./images/**',
+				'./vendor/bootstrap/css/bootstrap.min.css',
 				'./index.html'
 				]
 			}

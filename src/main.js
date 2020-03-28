@@ -4,7 +4,7 @@ const app = new App({
 	target: document.body
 });
 
-Notification.requestPermission();	// add a application notification prompt for the uses of the site
+//Notification.requestPermission();	// add a application notification prompt for the uses of the site (disabled for now)
 
 // Add basic service worker registration code (works in Chrome but not Firefox)
 // NOTE: the registered path is root
