@@ -4,9 +4,10 @@ The easiest thing to start using this code is simply fork it to your personal Gi
 ## Change log
 
 March 27, 2020
-- released version 0.1.2
+- released version 0.1.3
 - running PWA audits in Lighthouse and finally getting a green light
 - gave up on trying to get the service worker registered in Firefox since it seems to simply ignore that a service working is trying to be installed (from what I have read there are issues outstanding regarding permission settings set my users being incompatible with service workers)
+- optimized bootstrap to only use a single minified css file and removed the bootstrap module (which did not allow for simply loading the css file since it included a reference to the css map file which we do not need)
 
 March 26, 2020
 - released version 0.1
