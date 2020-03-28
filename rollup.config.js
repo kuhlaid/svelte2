@@ -40,7 +40,7 @@ export default {
 		copy({
             targets: [{ 
                 src: 'node_modules/bootstrap/dist/css/bootstrap.min.css', 
-                dest: 'public/vendor/bootstrap/css/bootstrap.min.css' 
+                dest: 'public/bootstrap.min.css' 
 			},
 			{ 
                 src: 'src/sw.js',

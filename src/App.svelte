@@ -25,9 +25,23 @@ March 24, 2020 - wpg
 		//console.log(event);
 		selected = options[event.srcElement.id];
 	}
+
+	// just some testing code to send console messages to the browser window
+	// let consolelogs = "";
+	// console.log = function() {
+	// 	consolelogs += 'log-----'+(JSON && JSON.stringify ? JSON.stringify(arguments) : arguments);
+	// };
+
+	// console.warn = function() {
+	// 	consolelogs += 'warn-----'+(JSON && JSON.stringify ? JSON.stringify(arguments) : arguments);
+	// };
+
+	// console.error = function() {
+	// 	consolelogs += 'err----'+(JSON && JSON.stringify ? JSON.stringify(arguments) : arguments);
+	// };
 </script>
 
-<link rel='stylesheet' href='vendor/bootstrap/css/bootstrap.min.css'>
+<link rel='stylesheet' href='/bootstrap.min.css'>
 
 <div class="container">
  <!-- component selector using normal html element could be used in connection with bootstrap.
@@ -44,5 +58,6 @@ March 24, 2020 - wpg
       <!-- this is where our main content is placed -->
 	<svelte:component this={selected.component}/>
     </div>
+	<!--<div class="alert alert-warning">{consolelogs}</div>-->
   </div>
 </div>
