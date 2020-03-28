@@ -41,7 +41,7 @@ March 24, 2020 - wpg
 	// };
 </script>
 
-<link rel='stylesheet' href='/bootstrap.min.css'>
+<link rel='stylesheet' href='/bs4.4.1.css'>
 
 <div class="container">
  <!-- component selector using normal html element could be used in connection with bootstrap.

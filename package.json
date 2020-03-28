@@ -21,7 +21,6 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "bootstrap": "^4.4.1",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-workbox-build": "^0.2.0",
     "sirv-cli": "^0.4.4",
