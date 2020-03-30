@@ -39,8 +39,39 @@ March 24, 2020 - wpg
 	// console.error = function() {
 	// 	consolelogs += 'err----'+(JSON && JSON.stringify ? JSON.stringify(arguments) : arguments);
 	// };
+
+let offlineCheck = {
+		bsAlert: 'alert-success',
+		status: 'online'
+	};
+
+function onlineStatus(blnStatus) {
+  if (blnStatus) {
+	//console.log('online');
+	offlineCheck.bsAlert='alert-success';
+    offlineCheck.status='online';
+  } else {
+	//console.log('offline');
+	offlineCheck.bsAlert='alert-secondary';
+    offlineCheck.status='offline';
+  }
+}
+
+
+
+// listen for changes in the network status of the app
+window.addEventListener("load", () => {
+  onlineStatus(navigator.onLine); // check for online network status when the app loads ...
+  // ...then listen for changes
+  function handleNetworkChange(event) {
+    onlineStatus(navigator.onLine);
+  }  
+  window.addEventListener("online", handleNetworkChange);	// listen for online and offline event changes
+  window.addEventListener("offline", handleNetworkChange);
+});
 </script>
 
+<!-- Include Bootstrap CSS-->
 <link rel='stylesheet' href='/bs4.4.1.css'>
 
 <div class="container">
@@ -51,6 +82,9 @@ March 24, 2020 - wpg
   <button type="button" class="btn btn-primary" on:click={changeComponent} id={i}>{option.page}</button>
  {/each}
 </div> 
+
+<!-- Simple network status notification -->
+<div class="alert {offlineCheck.bsAlert} m-2 ">Network status: <strong>{offlineCheck.status}</strong></div>
 
   <div class="row">
     <div class="col-sm-12">

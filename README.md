@@ -3,6 +3,16 @@ The easiest thing to start using this code is simply fork it to your personal Gi
 
 ## Change log
 
+March 30, 2020
+- finishing up basic network status handler
+- tabling localforage data storage until I can understand Svelte component loading and bindings linked to promises
+
+March 29, 2020
+- trying to understand Promise syntax in Svelte
+
+March 28, 2020
+- testing localforage
+
 March 27, 2020
 - released version 0.1.3
 - running PWA audits in Lighthouse and finally getting a green light
