@@ -75,16 +75,16 @@ window.addEventListener("load", () => {
 <link rel='stylesheet' href='/bs4.4.1.css'>
 
 <div class="container">
- <!-- component selector using normal html element could be used in connection with bootstrap.
- Using the array index value in the foreach statement. -->
- <div class="btn-group btn-group-lg">
-  {#each options as option, i}
-  <button type="button" class="btn btn-primary" on:click={changeComponent} id={i}>{option.page}</button>
- {/each}
-</div> 
+	<!-- component selector using normal html element could be used in connection with bootstrap.
+	Using the array index value in the foreach statement. -->
+	<div class="btn-group btn-group-lg">
+	{#each options as option, i}
+	<button type="button" class="btn btn-primary" on:click={changeComponent} id={i}>{option.page}</button>
+	{/each}
+	</div> 
 
-<!-- Simple network status notification -->
-<div class="alert {offlineCheck.bsAlert} m-2 ">Network status: <strong>{offlineCheck.status}</strong></div>
+	<!-- Simple network status notification -->
+	<div class="alert {offlineCheck.bsAlert} m-2 ">Network status: <strong>{offlineCheck.status}</strong></div>
 
   <div class="row">
     <div class="col-sm-12">
@@ -94,4 +94,6 @@ window.addEventListener("load", () => {
     </div>
 	<!--<div class="alert alert-warning">{consolelogs}</div>-->
   </div>
+
+  <div class="alert alert-secondary p-1 mt-3">The source code for this app can be found at https://github.com/kuhlaid/svelte2</div>
 </div>
