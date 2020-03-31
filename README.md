@@ -3,9 +3,13 @@ The easiest thing to start using this code is simply fork it to your personal Gi
 
 ## Change log
 
+March 31, 2020
+- creating a new component for entering back-end API connection information
+- creating a basic Laravel template with simple API test to use against this Svelte front-end (https://github.com/kuhlaid/laravel2020.03.31)
+
 March 30, 2020
 - finishing up basic network status handler
-- tabling localforage data storage until I can understand Svelte component loading and bindings linked to promises
+- looking into Laravel integration; thought of using a Laravel Svelte combined build but that would be overly complicated and poor practice in my opinion
 
 March 29, 2020
 - trying to understand Promise syntax in Svelte

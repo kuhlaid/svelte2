@@ -11,19 +11,24 @@ March 24, 2020 - wpg
 	import Visits from './Visits.svelte';
 	import Articles from  './Articles.svelte';
 	import Drawer from './Drawer.svelte';
+	import ApiSettings from './ApiSettings.svelte';
 
 	// these are our 'pages'
 	const options = [
-		{ page: 'Visits',   component: Visits   },
-		{ page: 'Articles', component: Articles },
-		{ page: 'Drawer',   component: Drawer   },
+		{ page: 'Nav 1',   component: Visits   },
+		{ page: 'LocalStorage Test', component: Articles },
+		{ page: 'Nav 2',   component: Drawer   },
+		{ page: 'API Settings',   component: ApiSettings   },
 	];
 	let selected = options[0];
+	let intSelected = 0;
+	let strActiveComponent;
 
 	// the changeComponent function changes the selected component (the event.originalTarget.id is not accessible in Chrome so switched to event.srcElement.id)
 	function changeComponent(event) {
 		//console.log(event);
 		selected = options[event.srcElement.id];
+		intSelected = event.srcElement.id;
 	}
 
 	// just some testing code to send console messages to the browser window
@@ -41,18 +46,21 @@ March 24, 2020 - wpg
 	// };
 
 let offlineCheck = {
-		bsAlert: 'alert-success',
+		bsAlert: 'alert-light',
+		statusColor: '',
 		status: 'online'
 	};
 
 function onlineStatus(blnStatus) {
   if (blnStatus) {
 	//console.log('online');
-	offlineCheck.bsAlert='alert-success';
+	offlineCheck.statusColor='text-success';
+	offlineCheck.bsAlert='alert-light';
     offlineCheck.status='online';
   } else {
 	//console.log('offline');
-	offlineCheck.bsAlert='alert-secondary';
+	offlineCheck.bsAlert='alert-danger';
+	offlineCheck.statusColor='';
     offlineCheck.status='offline';
   }
 }
@@ -75,25 +83,28 @@ window.addEventListener("load", () => {
 <link rel='stylesheet' href='/bs4.4.1.css'>
 
 <div class="container">
-	<!-- component selector using normal html element could be used in connection with bootstrap.
-	Using the array index value in the foreach statement. -->
-	<div class="btn-group btn-group-lg">
+	<!--app navigation -->
+	<ul class="nav nav-tabs">
 	{#each options as option, i}
-	<button type="button" class="btn btn-primary" on:click={changeComponent} id={i}>{option.page}</button>
+	<li class="nav-item">
+		<button class={intSelected==i ? "nav-link active p-2 ml-1" : "p-2 ml-1 nav-link"} on:click={changeComponent} id={i} role="tab">{option.page}</button>
+	</li>
 	{/each}
-	</div> 
+	</ul>
 
-	<!-- Simple network status notification -->
-	<div class="alert {offlineCheck.bsAlert} m-2 ">Network status: <strong>{offlineCheck.status}</strong></div>
 
   <div class="row">
     <div class="col-sm-12">
-      <h3>{selected.page}</h3>
-      <!-- this is where our main content is placed -->
-	<svelte:component this={selected.component}/>
+		<div class="p-2">
+			<h1>{selected.page}</h1>
+			<!-- this is where our main content is placed -->
+			<svelte:component this={selected.component}/>
+		</div>
     </div>
-	<!--<div class="alert alert-warning">{consolelogs}</div>-->
   </div>
 
-  <div class="alert alert-secondary p-1 mt-3">The source code for this app can be found at https://github.com/kuhlaid/svelte2</div>
+	<!-- Simple network status notification -->
+	<div class="alert {offlineCheck.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{offlineCheck.statusColor}">{offlineCheck.status}</strong></div>
+
+  <div class="alert alert-light p-2">The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
 </div>
