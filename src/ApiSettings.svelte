@@ -56,9 +56,10 @@
 
     }
 </script>
-<div class="p-4 m-3 border border-solid">This Svelte component contains code to save a URL to a server API to the browser localstorage and attempt to retrieve
-data from the server API. If you start a local copy of the Laravel API testing template at https://github.com/kuhlaid/laravel2020.03.31 and start up the local server, 
-you should be able to copy the following URL into the server API address field to pull test API data from the local Laravel server:<br/>
+<div class="p-4 m-3 border border-solid">This Svelte component demonstrates the saving of application settings to localstorage and requesting simple API test data from a Laravel server 
+using the Laravel template at https://github.com/kuhlaid/laravel2020.03.31. Once you have cloned the Laravel GitHub code just mentioned and started the local Laravel server,
+you should be able to copy/enter the following URL into the server API address field to pull test API data from your local Laravel server (if your local Laravel host address is not 127.0.0.1:8000 simply substitute
+your host string in the following URL):<br/>
 <strong>http://127.0.0.1:8000/api_ex</strong>
 </div>
 <div class="input-group input-group-sm mb-3">
