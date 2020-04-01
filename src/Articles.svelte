@@ -39,7 +39,9 @@
     console.log({$store});  // see if we can get the same store value
 </script>
 
-
+<div class="p-2">
+This component is used to show how to save data to localStorage.
+</div>
 <label for="testData">Enter test data</label>
 <input bind:value={$store} placeholder="give some input here"/>
 

@@ -8,6 +8,7 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
+
 	import Visits from './Visits.svelte';
 	import Articles from  './Articles.svelte';
 	import Drawer from './Drawer.svelte';
@@ -15,9 +16,7 @@ March 24, 2020 - wpg
 
 	// these are our 'pages'
 	const options = [
-		{ page: 'Nav 1',   component: Visits   },
-		{ page: 'LocalStorage Test', component: Articles },
-		{ page: 'Nav 2',   component: Drawer   },
+		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
 	];
 	let selected = options[0];
@@ -106,5 +105,5 @@ window.addEventListener("load", () => {
 	<!-- Simple network status notification -->
 	<div class="alert {offlineCheck.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{offlineCheck.statusColor}">{offlineCheck.status}</strong></div>
 
-  <div class="alert alert-light p-2">The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
+  <div class="alert alert-light p-2">(v=__cVersion__) The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
 </div>

@@ -13,10 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// include workbox-sw (https://developers.google.com/web/tools/workbox/modules/workbox-sw)
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
 if (workbox) {
-    console.log(`Yay! Workbox and the service worker are loaded 🎉`);
+    console.log(`(v=__cVersion__) Yay! Workbox and the service worker are loaded 🎉`);
     workbox.precaching.precacheAndRoute([]);
 
     // const showNotification = () => {

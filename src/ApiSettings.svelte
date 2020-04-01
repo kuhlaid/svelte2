@@ -29,24 +29,24 @@
             strApiUrlReadable = value;
         });
     }
-
+        
     function checkApi() {
         objApiData = '<div class="spinner-border" role="status"><span class="sr-only">Checking the API, please wait...</span></div>';   // note the '@html' in the output
         fetch($storeApiUrlReadable, {mode: 'cors'})
         .then(
             function(response) {
-            if (response.status !== 200) {
-                console.log('Looks like there was a problem. Status Code: ' +
-                response.status);
-                objApiData = '';
-                return;
-            }
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                    response.status);
+                    objApiData = '';
+                    return;
+                }
 
-            // Examine the text in the response
-            response.json().then(function(data) {
-                objApiData = JSON.stringify(data);
-                console.log(data);
-            });
+                // Examine the text in the response (Note: we should not allow submission of a blank field so we disable the submit button unless something is entered)
+                response.json().then(function(data) {
+                    objApiData = JSON.stringify(data);
+                    console.log(data);
+                });
             }
         )
         .catch(function(err) {
@@ -57,7 +57,7 @@
     }
 </script>
 <div class="p-4 m-3 border border-solid">This Svelte component demonstrates the saving of application settings to localstorage and requesting simple API test data from a Laravel server 
-using the Laravel template at https://github.com/kuhlaid/laravel2020.03.31. Once you have cloned the Laravel GitHub code just mentioned and started the local Laravel server,
+using the Laravel template at <a href="https://github.com/kuhlaid/laravel2020.03.31" target="_blank">https://github.com/kuhlaid/laravel2020.03.31</a>. Once you have cloned the Laravel GitHub code just mentioned and started the local Laravel server,
 you should be able to copy/enter the following URL into the server API address field to pull test API data from your local Laravel server (if your local Laravel host address is not 127.0.0.1:8000 simply substitute
 your host string in the following URL):<br/>
 <strong>http://127.0.0.1:8000/api_ex</strong>
@@ -68,7 +68,7 @@ your host string in the following URL):<br/>
   </div>
   <input type="text" class="form-control" aria-label="Server API URL" aria-describedby="inputGroup-sizing-sm" bind:value={$storeApiUrlWritable} placeholder="Paste/Enter the server API address here" id="apiUrlInput"/>
 </div>
-<button on:click={btnSaveClick_ApiUrl} class="btn btn-primary">Save the server API address and check for data from the API</button>
+<button on:click={btnSaveClick_ApiUrl} class="btn btn-primary" disabled={!$storeApiUrlWritable}>Save the server API address and check for data from the API</button>
 
 <div class="p-4 m-3 border border-solid">
 <h3>Data from the server API:</h3>

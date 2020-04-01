@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import replace from '@rollup/plugin-replace';	// used to add 'constants' to build files
 
 // cache files offline
 import workbox from 'rollup-plugin-workbox-build'
@@ -21,6 +22,8 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
+		replace({ __cVersion__: 'c0.1.15' }),
+
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
@@ -30,7 +33,6 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
-
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
 		// as well as copy the service worker, manifest, idb handler, and images
 		// { 
@@ -83,6 +85,8 @@ export default {
 				]
 			}
 			}),
+		
+		
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),

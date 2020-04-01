@@ -6,26 +6,6 @@ const app = new App({
 
 //Notification.requestPermission();	// add a application notification prompt for the uses of the site (disabled for now)
 
-// Add basic service worker registration code (works in Chrome but not Firefox)
-// NOTE: the registered path is root
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('./sw.js')
-//       .then(registration => {
-//         console.log(`Service Worker registered! Scope: ${registration.scope}`);
-//         //registration.showNotification(`Service Worker registered!`);  // if we want to send a push notification to the user
-//       })
-//       .catch(err => {
-//         console.log(`Service Worker registration failed: ${err}`);
-//         //err.showNotification(`Service Worker registration failed`);  // if we want to send a notification to the user
-//       });
-//   });
-// }
-
-
-
-
-
 // trying this service working initializer to see if it works in Firefox
 (function() {
   'use strict';
@@ -45,7 +25,7 @@ const app = new App({
   window.addEventListener('load', function() {
       if ('serviceWorker' in navigator &&
           (window.location.protocol === 'https:' || isLocalhost)) {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('./sw.js?v=__cVersion__')
         .then(function(registration) {
           console.log('Service Worker seems to be registered!');
           // updatefound is fired if service-worker.js changes.
@@ -85,6 +65,12 @@ const app = new App({
   });
 })();
 
+
+import localforage from 'localforage';
+localforage.config({
+  name: 'svelte2db'
+});
+
 // - create indexedDB database (comment out for now)
 // const dbPromise = createIndexedDB();
 // function createIndexedDB() {
@@ -95,4 +81,5 @@ const app = new App({
 //     }
 //   });
 // }
+
 export default app;
