@@ -6,7 +6,7 @@
   "description": "Svelte example (not Svelte version 2) with basic Bootstrap styling and navigation to give a 'multi-page' feel. Repository found at https://github.com/kuhlaid/svelte2.",
   "short_name": "svelte2",
   "lang": "en-US",
-  "start_url": "index.html",
+  "start_url": "index.html?v=__cVersion__",
   "display": "standalone",
   "theme_color": "#90a8b2",
   "background_color": "#90a8b2",

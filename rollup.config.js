@@ -2,8 +2,8 @@ import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
-import replace from '@rollup/plugin-replace';	// used to add 'constants' to build files
+import terser from 'terser';	// using the basic terser since we need to run this after processing the build files
+import fs from 'fs-extra';	// used in connection with terser to update the fileVersion string in our build files
 
 // cache files offline
 import workbox from 'rollup-plugin-workbox-build'
@@ -11,7 +11,11 @@ import workbox from 'rollup-plugin-workbox-build'
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
 
+// used after the build to minify the build.js (or anything else we should compress)
+import replace from 'replace-in-file';	
+
 const production = !process.env.ROLLUP_WATCH;
+const fileVersion = 'c0.1.197';	// change this when we want to update the file cache
 
 export default {
 	input: 'src/main.js',
@@ -22,7 +26,6 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
-		replace({ __cVersion__: 'c0.1.15' }),
 
 		svelte({
 			// enable run-time checks when not in production
@@ -33,6 +36,8 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
+
+		
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
 		// as well as copy the service worker, manifest, idb handler, and images
 		// { 
@@ -46,6 +51,10 @@ export default {
 			},
 			{ 
                 src: 'src/sw.js',
+                dest: 'public/' 
+			},
+			{ 
+                src: 'src/index.html',
                 dest: 'public/' 
 			},
 			{ 
@@ -77,7 +86,7 @@ export default {
 				swDest: 'public/sw.js',
 				globDirectory: 'public',
 				globPatterns: [
-				'**/*.{html,json,js,css,png,map}',
+				'**/*.{json,js,css,png,map}',
 				'./manifest.json',
 				'./images/**',
 				'./bs4.4.1.css',
@@ -85,8 +94,8 @@ export default {
 				]
 			}
 			}),
-		
-		
+
+
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),
@@ -97,9 +106,7 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
-
-		
+		production && serve(true)
 		
 	],
 	watch: {
@@ -108,8 +115,9 @@ export default {
 };
 
 
-function serve() {
-	let started = false;
+// default to starting dev build (prodBuild=true for production build)
+function serve(prodBuild=false){
+	 let started = false;
 
 	return {
 		writeBundle() {
@@ -120,6 +128,24 @@ function serve() {
 					stdio: ['ignore', 'inherit', 'inherit'],
 					shell: true
 				});
+
+				// this function simply replaces text in our build files to help clear the file cache (not local storage)
+				replace.sync({
+					files: [
+						'public/index.html',
+						'public/manifest.json',
+						'public/build/bundle.js'
+					],
+					from: /__cVersion__/g,
+					to: fileVersion,
+				  });
+
+				  //console.log('terser me');
+				  if (prodBuild) {
+					var code = fs.readFileSync("public/build/bundle.js", "utf8");
+					fs.writeFileSync("public/build/bundle.js", terser.minify(code).code, "utf8");
+				  }
+				  
 			}
 		}
 	};

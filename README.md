@@ -3,6 +3,10 @@ The easiest thing to start using this code is simply fork it to your personal Gi
 
 ## Change log
 
+April 1, 2020
+- adding a 'replace-in-file' plugin that allows for string replacement of constants/variables in my distribution/build files (using to clear file cache)
+- tested trying to use the @rollup/plugin-replace and rollup-plugin-modify but only the main.js and svelte files were affected so I had to rework the rollup process
+
 March 31, 2020
 - creating a new component for entering back-end API connection information
 - creating a basic Laravel template with simple API test to use against this Svelte front-end (https://github.com/kuhlaid/laravel2020.03.31)
