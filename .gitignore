@@ -1,10 +1,11 @@
 node_modules/
 pubic/build/
 public
+staging
 .DS_Store
 public/build/bundle.css
 public/build/bundle.css.map
 public/build/bundle.js
 public/build/bundle.js.map
 public/sw.js
-public/index.html
+public/

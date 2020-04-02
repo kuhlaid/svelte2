@@ -18,6 +18,7 @@ March 24, 2020 - wpg
 	const options = [
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
+		{ page: 'Placeholder',   component: Drawer   },
 	];
 	let selected = options[0];
 	let intSelected = 0;
@@ -105,5 +106,5 @@ window.addEventListener("load", () => {
 	<!-- Simple network status notification -->
 	<div class="alert {offlineCheck.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{offlineCheck.statusColor}">{offlineCheck.status}</strong></div>
 
-  <div class="alert alert-light p-2">(v=__cVersion__) The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
+  <div class="alert alert-light p-2">(__cVersion__) The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
 </div>

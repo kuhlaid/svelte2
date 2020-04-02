@@ -4,6 +4,7 @@ const app = new App({
 	target: document.body
 });
 
+
 //Notification.requestPermission();	// add a application notification prompt for the uses of the site (disabled for now)
 
 // trying this service working initializer to see if it works in Firefox
@@ -66,10 +67,33 @@ const app = new App({
 })();
 
 
-import localforage from 'localforage';
-localforage.config({
-  name: 'svelte2db'
-});
+// import localforage from 'localforage';
+// localforage.config({
+//   name: 'svelte2db'
+// });
+
+// handle clearing of the CacheStorage when new code updates are pushed
+const codeVersion = '__cVersion__'; // current code version
+// we need to check if the codeVersion currenlty stored in localStorage in the web browser is the different from the new code version
+// we only want to run this code once on the user side to update the service worker cache
+const strCodeVersion = localStorage.getItem("codeVersion");
+if (strCodeVersion!=codeVersion) {
+  localStorage.setItem("codeVersion", codeVersion);
+  console.log('codeVersion updated in local storage');
+  const l = console.log    
+  if ('caches' in window) {
+    l('caches in window');
+    caches.keys().then(function(cacheArray) {
+      l(cacheArray);
+      cacheArray.forEach(function(cache) {
+        caches.delete(cache).then((bool) => {
+          l('deleted cache: '+cache); // true
+        }).catch((err) => {l(err)});
+      });
+    });
+  }
+}
+
 
 // - create indexedDB database (comment out for now)
 // const dbPromise = createIndexedDB();

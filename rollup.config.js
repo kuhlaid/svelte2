@@ -15,7 +15,7 @@ import copy from 'rollup-plugin-copy';
 import replace from 'replace-in-file';	
 
 const production = !process.env.ROLLUP_WATCH;
-const fileVersion = 'c0.1.197';	// change this when we want to update the file cache
+const fileVersion = 'v0.1.204';	// change this when we want to update the file cache
 
 export default {
 	input: 'src/main.js',
@@ -27,6 +27,11 @@ export default {
 	},
 	plugins: [
 
+		// clear out the staging directory
+		updateStagingDir(),
+
+		runCodeVersionReplaceOnStaging(),
+
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
@@ -37,32 +42,29 @@ export default {
 			}
 		}),
 
-		
+		//throwOut(),	// use if we want to stop the code at some point
+
 		// using the rollup-plugin-copy module to copy our bootstrap module code from the modules directory to our build directory
 		// as well as copy the service worker, manifest, idb handler, and images
-		// { 
-		// 	src: 'src/idb-promised.js', 
-		// 	dest: 'public/' 
-		// },
 		copy({
             targets: [{ 
-                src: 'src/bs4.4.1.css', 
+                src: 'staging/bs4.4.1.css', 
                 dest: 'public/' 
 			},
 			{ 
-                src: 'src/sw.js',
+                src: 'staging/sw.js',
                 dest: 'public/' 
 			},
 			{ 
-                src: 'src/index.html',
+                src: 'staging/index.html',
                 dest: 'public/' 
 			},
 			{ 
-                src: 'src/manifest.json', 
+                src: 'staging/manifest.json', 
                 dest: 'public/' 
 			},
 			{ 
-                src: 'src/images/*', 
+                src: 'staging/images/*', 
                 dest: 'public/images/'
 			}
 			]
@@ -82,7 +84,7 @@ export default {
 		workbox({
 			mode: 'injectManifest',
 			options: {
-				swSrc: 'src/sw.js',
+				swSrc: 'staging/sw.js',
 				swDest: 'public/sw.js',
 				globDirectory: 'public',
 				globPatterns: [
@@ -114,6 +116,46 @@ export default {
 	}
 };
 
+// we need to clear and update the staging directory syncronously
+function updateStagingDir() {
+	console.log('Clear staging directory');
+	
+	try {
+		fs.emptyDirSync('staging');
+		console.log('Empty staging directory');
+	} catch (err) {
+		throw "err";
+	}
+
+	try {
+		fs.copySync('src', 'staging');
+		console.log('Copied src to staging');
+	} catch (err) {
+		throw "err";
+	}
+	console.log('Updated staging directory');
+}
+
+function runCodeVersionReplaceOnStaging() {
+	
+	// this function simply replaces text in our staging files to help clear the file cache when the code is built
+	const replaceResults = replace.sync({
+		files: [
+			'staging/index.html',
+			'staging/main.js',
+			'staging/manifest.json'
+		],
+		from: /__cVersion__/g,
+		to: fileVersion,
+		});
+	// var code = fs.readFileSync("staging/index.html", "utf8");
+	// console.log(code);
+	console.log(replaceResults);
+}
+
+function throwOut() {
+	throw 'end this code run';
+}
 
 // default to starting dev build (prodBuild=true for production build)
 function serve(prodBuild=false){
@@ -140,11 +182,11 @@ function serve(prodBuild=false){
 					to: fileVersion,
 				  });
 
-				  //console.log('terser me');
-				  if (prodBuild) {
+				//console.log('terser me');
+				if (prodBuild) {
 					var code = fs.readFileSync("public/build/bundle.js", "utf8");
 					fs.writeFileSync("public/build/bundle.js", terser.minify(code).code, "utf8");
-				  }
+				}
 				  
 			}
 		}
