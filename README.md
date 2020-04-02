@@ -1,5 +1,10 @@
 ## Getting started
-The easiest thing to start using this code is simply fork it to your personal GitHub space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action.
+The easiest way to start using this code is to simply fork it to your personal GitHub project space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action. 
+
+## Notes about the app
+This app is only built and tested against the Chrome browser (as of writing this, version 80). There are not special configuration files that need to be adjuested to run the code
+locally, but the rollup.config.js contains a 'fileVersion' variable for basically clearing the application cache in the browser; simply change the fileVersion value to force a cache refresh on the next build of the app.
+
 
 ## Change log
 

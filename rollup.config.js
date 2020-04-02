@@ -11,7 +11,7 @@ import workbox from 'rollup-plugin-workbox-build'
 // wpg - used to copy the bootstrap installed via NPM to our public folder
 import copy from 'rollup-plugin-copy';
 
-// used after the build to minify the build.js (or anything else we should compress)
+// used to replace instances of 'caching versions' in our build files
 import replace from 'replace-in-file';	
 
 const production = !process.env.ROLLUP_WATCH;
