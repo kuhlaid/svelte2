@@ -15,7 +15,7 @@ import copy from 'rollup-plugin-copy';
 import replace from 'replace-in-file';	
 
 const production = !process.env.ROLLUP_WATCH;
-const fileVersion = 'v0.1.204';	// change this when we want to update the file cache
+const fileVersion = 'v0.1.205';	// change this when we want to update the file cache
 
 export default {
 	input: 'src/main.js',
@@ -141,7 +141,6 @@ function runCodeVersionReplaceOnStaging() {
 	// this function simply replaces text in our staging files to help clear the file cache when the code is built
 	const replaceResults = replace.sync({
 		files: [
-			'staging/index.html',
 			'staging/main.js',
 			'staging/manifest.json'
 		],
@@ -174,7 +173,6 @@ function serve(prodBuild=false){
 				// this function simply replaces text in our build files to help clear the file cache (not local storage)
 				replace.sync({
 					files: [
-						'public/index.html',
 						'public/manifest.json',
 						'public/build/bundle.js'
 					],

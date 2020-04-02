@@ -26,7 +26,7 @@ const app = new App({
   window.addEventListener('load', function() {
       if ('serviceWorker' in navigator &&
           (window.location.protocol === 'https:' || isLocalhost)) {
-        navigator.serviceWorker.register('./sw.js?v=__cVersion__')
+        navigator.serviceWorker.register('./sw.js')
         .then(function(registration) {
           console.log('Service Worker seems to be registered!');
           // updatefound is fired if service-worker.js changes.
