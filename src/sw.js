@@ -17,7 +17,8 @@ limitations under the License.
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
 if (workbox) {
-    console.log(`Yay! Workbox and the service worker are loaded 🎉`);
+    // adding __cVersion__ since I suspect this file needs to change in some fashion between builds if it is relying on a file hash generated from the source of this script
+    console.log(`(version __cVersion__ running. Yay! Workbox and the service worker are loaded 🎉`);
     workbox.precaching.precacheAndRoute([]);
 
     // const showNotification = () => {

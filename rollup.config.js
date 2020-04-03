@@ -15,7 +15,7 @@ import copy from 'rollup-plugin-copy';
 import replace from 'replace-in-file';	
 
 const production = !process.env.ROLLUP_WATCH;
-const fileVersion = 'v0.1.205';	// change this when we want to update the file cache
+const fileVersion = 'v0.1.246';	// change this when we want to update the file cache constant (__cVersion__)
 
 export default {
 	input: 'src/main.js',
@@ -66,6 +66,10 @@ export default {
 			{ 
                 src: 'staging/images/*', 
                 dest: 'public/images/'
+			},
+			{ 
+                src: 'staging/codeVersion.json', 
+                dest: 'public/'
 			}
 			]
 		}),
@@ -88,7 +92,7 @@ export default {
 				swDest: 'public/sw.js',
 				globDirectory: 'public',
 				globPatterns: [
-				'**/*.{json,js,css,png,map}',
+				'**/*.{js,css,png,map}',
 				'./manifest.json',
 				'./images/**',
 				'./bs4.4.1.css',
@@ -141,6 +145,10 @@ function runCodeVersionReplaceOnStaging() {
 	// this function simply replaces text in our staging files to help clear the file cache when the code is built
 	const replaceResults = replace.sync({
 		files: [
+			'staging/codeVersion.json',
+			'staging/sw.js',
+			'staging/App.svelte',
+			'staging/index.html',
 			'staging/main.js',
 			'staging/manifest.json'
 		],
@@ -173,6 +181,7 @@ function serve(prodBuild=false){
 				// this function simply replaces text in our build files to help clear the file cache (not local storage)
 				replace.sync({
 					files: [
+						'public/sw.js',
 						'public/manifest.json',
 						'public/build/bundle.js'
 					],
