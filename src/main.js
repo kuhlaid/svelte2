@@ -121,14 +121,13 @@ function swUnreg(){
             });
           });
         }
-        //location.reload(); 
       });
       return response;
   }
 
   asUnregSw().then((response) => {
       console.log('finished unregistering the service workers, now register a new one');
-      swReg();
+      location.reload();  // we need to reload the page for the new service worker to register fully
     })
     .catch((err) => {
       alert(err +' blah asUnregSw failed errrrrr');
