@@ -15,7 +15,7 @@ import copy from 'rollup-plugin-copy';
 import replace from 'replace-in-file';	
 
 const production = !process.env.ROLLUP_WATCH;
-const fileVersion = 'v0.1.250';	// change this when we want to update the file cache constant (__cVersion__)
+const fileVersion = 'v0.1.251';	// change this when we want to update the file cache constant (__cVersion__)
 
 export default {
 	input: 'src/main.js',
@@ -160,9 +160,9 @@ function runCodeVersionReplaceOnStaging() {
 	console.log(replaceResults);
 }
 
-function throwOut() {
-	throw 'end this code run';
-}
+// function throwOut() {
+// 	throw 'end this code run';
+// }
 
 // default to starting dev build (prodBuild=true for production build)
 function serve(prodBuild=false){
@@ -173,10 +173,12 @@ function serve(prodBuild=false){
 			if (!started) {
 				started = true;
 
-				require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-					stdio: ['ignore', 'inherit', 'inherit'],
-					shell: true
-				});
+				if (!prodBuild) {
+					require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+						stdio: ['ignore', 'inherit', 'inherit'],
+						shell: true
+					});
+				}
 
 				// this function simply replaces text in our build files to help clear the file cache (not local storage)
 				replace.sync({
