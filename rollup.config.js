@@ -15,7 +15,7 @@ import copy from 'rollup-plugin-copy';
 import replace from 'replace-in-file';	
 
 const production = !process.env.ROLLUP_WATCH;
-const fileVersion = 'v0.1.251';	// change this when we want to update the file cache constant (__cVersion__)
+const fileVersion = 'v0.1.252';	// change this when we want to update the file cache constant (__cVersion__)
 
 export default {
 	input: 'src/main.js',
