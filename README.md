@@ -9,6 +9,7 @@ This app is only built and tested against the Chrome browser (as of writing this
 
 April 6, 2020
 - tested using nanoSQL for indexedDb but the basic functions such as listDatabases are not able to find databases after creating a database and reloading the app; switched to idb plugin instead since that is in active development and has great documentation
+- looking into Svelte datatable; first tried jQuery datatables with bootstrap but that didn't work; switched to svelte-table plugin which worked well
 
 April 5, 2020
 - looking at nanoSQL as an alternative to localForage to save data locallly to indexedDb but it does not seem stable enough; may 
