@@ -22,7 +22,6 @@
   "dependencies": {
     "fs-extra": "^9.0.0",
     "idb": "^5.0.2",
-    "kind-of": "^6.0.3",
     "replace-in-file": "^5.0.2",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-workbox-build": "^0.2.0",
