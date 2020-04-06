@@ -18,7 +18,7 @@ March 24, 2020 - wpg
 	const options = [
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
-		{ page: 'Placeholder',   component: Drawer   },
+		{ page: 'idb Test',   component: Drawer   },
 	];
 	let selected = options[0];
 	let intSelected = 0;

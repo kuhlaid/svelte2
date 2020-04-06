@@ -1,12 +1,18 @@
 ## Getting started
-The easiest way to start using this code is to simply fork it to your personal GitHub project space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action. 
+The easiest way to begin using this code is to simply fork it to your personal GitHub project space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action. 
 
 ## Notes about the app
-This app is only built and tested against the Chrome browser (as of writing this, version 80). There are not special configuration files that need to be adjuested to run the code
-locally, but the rollup.config.js contains a 'fileVersion' variable for basically clearing the application cache in the browser; simply change the fileVersion value to force a cache refresh on the next build of the app.
+This app is only built and tested against the Chrome browser (as of writing this, version 80). There are no special configuration files that need to be adjuested to run the code locally, however the rollup.config.js contains a 'fileVersion' variable for clearing the application cache in the browser. You need to change this variable when updating a build for the application in order force the app to refresh in the browser (unless you manually clear the browser cache).
 
 
 ## Change log
+
+April 6, 2020
+- tested using nanoSQL for indexedDb but the basic functions such as listDatabases are not able to find databases after creating a database and reloading the app; switched to idb plugin instead since that is in active development and has great documentation
+
+April 5, 2020
+- looking at nanoSQL as an alternative to localForage to save data locallly to indexedDb but it does not seem stable enough; may 
+want to look at https://github.com/jakearchibald/idb#opendb
 
 April 2, 2020
 - creating a staging directory where the src code will be copied and versioning strings will be updated before compiling and building

@@ -178,24 +178,5 @@ function swReg() {
 
 }
 
-// import localforage from 'localforage';
-// localforage.config({
-//   name: 'svelte2db'
-// });
-
-
-
-
-// - create indexedDB database (comment out for now)
-// const dbPromise = createIndexedDB();
-// function createIndexedDB() {
-//   if (!('indexedDB' in window)) {return null;}
-//   return idb.open('svelte2db', 1, function(upgradeDb) {
-//     if (!upgradeDb.objectStoreNames.contains('events')) {
-//       const eventsOS = upgradeDb.createObjectStore('events', {keyPath: 'id'});
-//     }
-//   });
-// }
-
 console.log('end of main.js');
 export default app;
