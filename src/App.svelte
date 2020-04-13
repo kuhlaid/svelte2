@@ -8,12 +8,105 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
-	import { dbConnection } from './stores.js';
-	let dbGlobal;
-	const unsubscribe = dbConnection.subscribe(value => {
-		dbGlobal = value;
-	});
+	import { dbConnection,storeConnection,basicDbConnection } from './stores.js';
+	import { openDB, deleteDB, wrap, unwrap } from 'idb/with-async-ittr.js';    // using this version of idb since it is needed for iterating through index queries
 
+	// let dbConn=get(dbConnection);
+	// let storeConn=get(storeConnection);
+	let intDbVersion=1;
+	const __DBNAME__ = 'WpgTest';
+    const __STORENAME__ = 'storeTest';
+
+	// update the db connection and store connection in the Svelte store
+	// $: storeConnection.update(storeConn);
+	// $: dbConnection.update(dbConn);
+
+	// $: {
+	// 	console.log('db connection is:');
+	// 	console.log({dbConn});
+	// 	console.log('store connection is:');
+	// 	console.log({storeConn});
+	// }
+
+	function setupStore($dbConnection){
+        try {
+            console.log('try to connect to the storeConn');
+            // Create a $storeConnection of objects
+            $storeConnection = $dbConnection.createObjectStore(__STORENAME__+intDbVersion, {
+                // The 'id' property of the object will be the key.
+                keyPath: 'id',
+                // If it isn't explicitly set, create a value by auto incrementing.
+                autoIncrement: true,
+            });
+            // Create an index on the 'date' property of the objects.
+            $storeConnection.createIndex('date', 'date');
+        }
+        catch(err) {
+            console.log("*********************setupStore"+err);
+           const $storeConnection = $dbConnection.transaction(__STORENAME__+intDbVersion).objectStore(__STORENAME__+intDbVersion);
+        }
+    }
+	// --- simply try to open the database
+    async function tryDbOpen() {
+        console.log('tryDbOpen start for version ' + intDbVersion);
+        console.log($dbConnection);
+        if (!$dbConnection) {
+            console.log('$dbConnection connection missing so need to establish a new conn');
+            // open the database
+            $dbConnection = await openDB(__DBNAME__, intDbVersion, {
+                upgrade($dbConnection) {
+                    console.log('upgrade tryDbOpen');
+                    setupStore($dbConnection);
+                },
+                blocked() {
+                    console.log('blocked tryDbOpen');
+                },
+                blocking() {
+                    console.log('blocking tryDbOpen');
+                },
+                terminated() {
+                    console.log('terminated tryDbOpen');
+                }
+            });
+        }
+        console.log("db1: ");
+        console.log(unwrap($dbConnection));
+        console.log("$storeConnection init: ");
+        console.log(unwrap($storeConnection));
+        // if the $storeConnection does not exist then setup
+        // if (!$storeConnection) {
+        //     console.log("$storeConnection needs to be setup again");
+        //     closeDb();
+        //     console.log("$dbConnection should be closed: ");
+        //     console.log(unwrap($dbConnection));
+        //     // open new version of the database
+        //     $dbConnection = await openDB(__DBNAME__, intDbVersion, {
+        //         upgrade($dbConnection) {
+        //             console.log("upgrade $dbConnection again");
+        //             setupStore($dbConnection);
+        //         },
+        //         blocked() {
+        //             console.log('blocked $storeConnection empty');
+        //         },
+        //         blocking() {
+        //             console.log('blocking $storeConnection empty');
+        //         },
+        //         terminated() {
+        //             console.log('terminated $storeConnection empty');
+        //         }
+		// 	});
+		// 	console.log("$storeConnection v2: ");
+        // 	console.log(unwrap($storeConnection));
+        // }
+        return $dbConnection;
+    }
+	tryDbOpen().then(($dbConnection) => {
+		console.log('tryDbOpen opened the $dbConnection');
+    })
+    .catch((err) => {
+      console.log(err +': tryDbOpen $dbConnection key not found');
+	});
+	
 	import Visits from './Visits.svelte';
 	import Articles from  './Articles.svelte';
 	import Drawer from './Drawer.svelte';
@@ -92,6 +185,47 @@ window.addEventListener("load", () => {
   window.addEventListener("online", handleNetworkChange);	// listen for online and offline event changes
   window.addEventListener("offline", handleNetworkChange);
 });
+
+// basic indexedDB API connections
+var openRequest = indexedDB.open('test_db', 1);
+
+openRequest.onupgradeneeded = function(e) {
+  var $basicDbConnection = e.target.result;
+  console.log('running onupgradeneeded');
+  if (!$basicDbConnection.objectStoreNames.contains('store')) {
+    var storeOS = $basicDbConnection.createObjectStore('store',
+      {keyPath: 'id', autoIncrement:true});
+  }
+};
+openRequest.onsuccess = function(e) {
+  console.log('running onsuccess');
+  $basicDbConnection = e.target.result;
+  addItem();
+};
+openRequest.onerror = function(e) {
+  console.log('onerror!');
+  console.dir(e);
+};
+
+function addItem() {
+  var transaction = $basicDbConnection.transaction(['store'], 'readwrite');
+  var store = transaction.objectStore('store');
+  var item = {
+    name: 'banana',
+    price: '$2.99',
+    description: 'It is a purple banana!',
+    created: new Date().getTime()
+  };
+
+ var request = store.add(item);
+
+ request.onerror = function(e) {
+    console.log('Error', e.target.error.name);
+  };
+  request.onsuccess = function(e) {
+    console.log('Woot! Did it');
+  };
+}
 </script>
 
 <!-- Include Bootstrap CSS-->
@@ -122,6 +256,4 @@ window.addEventListener("load", () => {
 	<div class="alert {offlineCheck.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{offlineCheck.statusColor}">{offlineCheck.status}</strong></div>
 
   <div class="alert alert-light p-2">(__cVersion__) The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
-
-	<div class="alert alert-secondary p-1">Test {dbGlobal}</div>
 </div>
