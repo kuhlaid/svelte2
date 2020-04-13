@@ -6,6 +6,13 @@ This app is only built and tested against the Chrome browser (as of writing this
 
 
 ## Change log
+April 13, 2020
+- I spent a week of indexedDb testing and pulled my hair out wondering why I couldn't force a indexedDb connection to close (even when there were no transactions taking place) and then reopen the db connection. The API makes it rather clear this is not possible. Closing a db connection (using the close method) within your code is fairly worthless and does not mean the browser has forgotten the browser tab that opened the connection. The browser still locks the connection for reuse in the same session by the same point of origin as they like to say in the indexedDb documentation. IndexedDb is useless unless you are making a simple counter app or add/delete notes app, which all of the example indexedDb code consists of. So while there is lot of boasting about all the features of indexedDb, it doesn't cut it for serious production apps. Blah.
+
+April 7, 2020
+- seeing if it is possible to serialze js code so when we make server API requests, data AS WELL AS js code to present the data can be passed back
+to the app (dynamic data presentation in our static front-end app); found that this can be done using the serialize-javascript plugin, but not sure if it is worth implementing
+- testing and debugging indexedDb code
 
 April 6, 2020
 - tested using nanoSQL for indexedDb but the basic functions such as listDatabases are not able to find databases after creating a database and reloading the app; switched to idb plugin instead since that is in active development and has great documentation
