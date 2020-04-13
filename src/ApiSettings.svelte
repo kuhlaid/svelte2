@@ -1,6 +1,9 @@
 <!--
     @abstract This component will be used to update the URL of the server-side API to connect to.
     We need to read the localstorage strApiUrl value and copy to a writable variable
+
+    @todo Check if the user has an active session with a back-end API and save session.
+    
 -->
 <script>
     

@@ -48,8 +48,8 @@ else func2();
 function func1(){
   console.log('start func1');  
   async function fetchLatesCV() {
-    let response = await fetch('/codeVersion.json');
-    let data = await response.json()
+    let response = await fetch('/codeVersion.json');  // we wait on the fetch of the json string
+    let data = await response.json(); // then we wait for the response to be translated to json
     return data;
   }
 

@@ -8,6 +8,11 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
+	import { dbConnection } from './stores.js';
+	let dbGlobal;
+	const unsubscribe = dbConnection.subscribe(value => {
+		dbGlobal = value;
+	});
 
 	import Visits from './Visits.svelte';
 	import Articles from  './Articles.svelte';
@@ -19,16 +24,26 @@ March 24, 2020 - wpg
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
 		{ page: 'idb Test',   component: Drawer   },
+		{ page: 'Data table',   component: Articles   },
 	];
 	let selected = options[0];
+
+	// if the session is set then go back to last component on refresh
+	if (sessionStorage.getItem("selectedComponentId")) {
+		selected = options[sessionStorage.getItem("selectedComponentId")];
+	}
+	
 	let intSelected = 0;
 	let strActiveComponent;
+	export const __DBVERSION__=1;
+
 
 	// the changeComponent function changes the selected component (the event.originalTarget.id is not accessible in Chrome so switched to event.srcElement.id)
 	function changeComponent(event) {
-		//console.log(event);
+		console.log("changeComponent");
 		selected = options[event.srcElement.id];
 		intSelected = event.srcElement.id;
+		sessionStorage.setItem("selectedComponentId", event.srcElement.id);	// saving the component ID to a session
 	}
 
 	// just some testing code to send console messages to the browser window
@@ -107,4 +122,6 @@ window.addEventListener("load", () => {
 	<div class="alert {offlineCheck.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{offlineCheck.statusColor}">{offlineCheck.status}</strong></div>
 
   <div class="alert alert-light p-2">(__cVersion__) The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
+
+	<div class="alert alert-secondary p-1">Test {dbGlobal}</div>
 </div>
