@@ -7,8 +7,10 @@ Things to think about
 This may allow for dynamically generated lists from local storage?
 -->
 <script>
-  import serialize from 'serialize-javascript'; // used to receive javascript instructios/payload from a server API
-  import SvelteTable from "svelte-table";   // used to build our data table
+  import { strStoreName_Produce,objProductStoreDbConn } from './stores.js';
+  //import SvelteTable from "svelte-table";   // used to build our data table
+  import ProduceList from "./ProduceList.tpl.svelte";   // pulling a list of data from our indexeddb data table
+  
     // define some sample data...
     var rows = [
     { id: 1, first_name: "Marilyn", last_name: "Monroe", gender: "female" },
@@ -34,27 +36,36 @@ This may allow for dynamically generated lists from local storage?
     ];
   
     // define column configs
-    var columnsRaw = [
+    var columns = [
+    {
+        key: "gender",
+        title: "GENDER",
+        value: v => v.gender,
+        renderValue: v => v.gender.charAt(0).toUpperCase() + v.gender.substring(1), // capitalize
+        sortable: true,
+        // filterOptions: ["male", "female"], // provide array
+        headerClass: " text-left active "
+    },
     {
         key: "id",
         title: "Identifier",
         value: v => v.id,
         sortable: true,
-        filterOptions: rows => {
-        // generate groupings of 0-10, 10-20 etc...
-        let nums = {};
-        rows.forEach(row => {
-            let num = Math.floor(row.id / 10);
-            if (nums[num] === undefined)
-            nums[num] = { name: `${num * 10} to ${(num + 1) * 10}`, value: num };
-        });
-        // fix order
-        nums = Object.entries(nums)
-            .sort()
-            .reduce((o, [k, v]) => ((o[k] = v), o), {});
-        return Object.values(nums);
-        },
-        filterValue: v => Math.floor(v.id / 10),
+        // filterOptions: rows => {
+        // // generate groupings of 0-10, 10-20 etc...
+        // let nums = {};
+        // rows.forEach(row => {
+        //     let num = Math.floor(row.id / 10);
+        //     if (nums[num] === undefined)
+        //     nums[num] = { name: `${num * 10} to ${(num + 1) * 10}`, value: num };
+        // });
+        // // fix order
+        // nums = Object.entries(nums)
+        //     .sort()
+        //     .reduce((o, [k, v]) => ((o[k] = v), o), {});
+        // return Object.values(nums);
+        // },
+        // filterValue: v => Math.floor(v.id / 10),
         headerClass: " text-left active "
     },
     {
@@ -62,24 +73,24 @@ This may allow for dynamically generated lists from local storage?
         title: "First name",
         value: v => v.first_name,
         sortable: true,
-        filterOptions: rows => {
-        // use first letter of first_name to generate filter
-        let letrs = {};
-        rows.forEach(row => {
-            let letr = row.first_name.charAt(0);
-            if (letrs[letr] === undefined)
-            letrs[letr] = {
-                name: `${letr.toUpperCase()}`,
-                value: letr.toLowerCase()
-            };
-        });
-        // fix order
-        letrs = Object.entries(letrs)
-            .sort()
-            .reduce((o, [k, v]) => ((o[k] = v), o), {});
-        return Object.values(letrs);
-        },
-        filterValue: v => v.first_name.charAt(0).toLowerCase(),
+        // filterOptions: rows => {
+        // // use first letter of first_name to generate filter
+        // let letrs = {};
+        // rows.forEach(row => {
+        //     let letr = row.first_name.charAt(0);
+        //     if (letrs[letr] === undefined)
+        //     letrs[letr] = {
+        //         name: `${letr.toUpperCase()}`,
+        //         value: letr.toLowerCase()
+        //     };
+        // });
+        // // fix order
+        // letrs = Object.entries(letrs)
+        //     .sort()
+        //     .reduce((o, [k, v]) => ((o[k] = v), o), {});
+        // return Object.values(letrs);
+        // },
+        // filterValue: v => v.first_name.charAt(0).toLowerCase(),
         headerClass: " text-left active "
     },
     {
@@ -87,47 +98,36 @@ This may allow for dynamically generated lists from local storage?
         title: "LAST_NAME",
         value: v => v.last_name,
         sortable: true,
-        filterOptions: rows => {
-        // use first letter of last_name to generate filter
-        let letrs = {};
-        rows.forEach(row => {
-            let letr = row.last_name.charAt(0);
-            if (letrs[letr] === undefined)
-            letrs[letr] = {
-                name: `${letr.toUpperCase()}`,
-                value: letr.toLowerCase()
-            };
-        });
-        // fix order
-        letrs = Object.entries(letrs)
-            .sort()
-            .reduce((o, [k, v]) => ((o[k] = v), o), {});
-        return Object.values(letrs);
-        },
-        filterValue: v => v.last_name.charAt(0).toLowerCase(),
-        headerClass: " text-left active "
-    },
-    {
-        key: "gender",
-        title: "GENDER",
-        value: v => v.gender,
-        renderValue: v => v.gender.charAt(0).toUpperCase() + v.gender.substring(1), // capitalize
-        sortable: true,
-        filterOptions: ["male", "female"], // provide array
+        // filterOptions: rows => {
+        // // use first letter of last_name to generate filter
+        // let letrs = {};
+        // rows.forEach(row => {
+        //     let letr = row.last_name.charAt(0);
+        //     if (letrs[letr] === undefined)
+        //     letrs[letr] = {
+        //         name: `${letr.toUpperCase()}`,
+        //         value: letr.toLowerCase()
+        //     };
+        // });
+        // // fix order
+        // letrs = Object.entries(letrs)
+        //     .sort()
+        //     .reduce((o, [k, v]) => ((o[k] = v), o), {});
+        // return Object.values(letrs);
+        // },
+        // filterValue: v => v.last_name.charAt(0).toLowerCase(),
         headerClass: " text-left active "
     }
     ];
 
-    var strColumns = serialize(columnsRaw);
-    let columns =  eval('('+strColumns+')');    // not recommended
+
+    
 </script> 
-<div class='m-1'>This component was added to test the svelte-table plugin. One idea here was to serialize the javascript data
-table column config and send that ALONG WITH the row data from the server API so we could save both the table data and configuration 
-to the local database and build data table dynamically. This would prevent the need to hard-code each of our datatables into the 
-front-end app. We could for example pull the data and configurations from the server API, save it locally and have a 'tables'
-component with a dropdown list of tables saved to local database; selecting a table would pull the data and config from the local db 
-and build the data table.
+<div class='m-1'>This component was added to test the svelte-table plugin. 
 <br/>
 @todo - work on styling the table and pulling data from the local database where data is pulled from the server
 </div>
-<SvelteTable columns="{columns}" rows="{rows}" classNameTable="table table-hover table-bordered"></SvelteTable>
+<!-- <SvelteTable columns="{columns}" rows="{rows}" classNameTable="table table-hover table-bordered"></SvelteTable>
+<SvelteTable columns="{columns}" rows="{rows}" classNameTable="table table-hover table-bordered"></SvelteTable> -->
+<hr/>
+<ProduceList/>

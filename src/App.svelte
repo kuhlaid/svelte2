@@ -8,105 +8,8 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
-	import { dbConnection,storeConnection,basicDbConnection } from './stores.js';
-	import { openDB, deleteDB, wrap, unwrap } from 'idb/with-async-ittr.js';    // using this version of idb since it is needed for iterating through index queries
+	import { strDbName_ProductStore,strStoreName_Produce,objProductStoreDbConn } from './stores.js';
 
-	// let dbConn=get(dbConnection);
-	// let storeConn=get(storeConnection);
-	let intDbVersion=1;
-	const __DBNAME__ = 'WpgTest';
-    const __STORENAME__ = 'storeTest';
-
-	// update the db connection and store connection in the Svelte store
-	// $: storeConnection.update(storeConn);
-	// $: dbConnection.update(dbConn);
-
-	// $: {
-	// 	console.log('db connection is:');
-	// 	console.log({dbConn});
-	// 	console.log('store connection is:');
-	// 	console.log({storeConn});
-	// }
-
-	function setupStore($dbConnection){
-        try {
-            console.log('try to connect to the storeConn');
-            // Create a $storeConnection of objects
-            $storeConnection = $dbConnection.createObjectStore(__STORENAME__+intDbVersion, {
-                // The 'id' property of the object will be the key.
-                keyPath: 'id',
-                // If it isn't explicitly set, create a value by auto incrementing.
-                autoIncrement: true,
-            });
-            // Create an index on the 'date' property of the objects.
-            $storeConnection.createIndex('date', 'date');
-        }
-        catch(err) {
-            console.log("*********************setupStore"+err);
-           const $storeConnection = $dbConnection.transaction(__STORENAME__+intDbVersion).objectStore(__STORENAME__+intDbVersion);
-        }
-    }
-	// --- simply try to open the database
-    async function tryDbOpen() {
-        console.log('tryDbOpen start for version ' + intDbVersion);
-        console.log($dbConnection);
-        if (!$dbConnection) {
-            console.log('$dbConnection connection missing so need to establish a new conn');
-            // open the database
-            $dbConnection = await openDB(__DBNAME__, intDbVersion, {
-                upgrade($dbConnection) {
-                    console.log('upgrade tryDbOpen');
-                    setupStore($dbConnection);
-                },
-                blocked() {
-                    console.log('blocked tryDbOpen');
-                },
-                blocking() {
-                    console.log('blocking tryDbOpen');
-                },
-                terminated() {
-                    console.log('terminated tryDbOpen');
-                }
-            });
-        }
-        console.log("db1: ");
-        console.log(unwrap($dbConnection));
-        console.log("$storeConnection init: ");
-        console.log(unwrap($storeConnection));
-        // if the $storeConnection does not exist then setup
-        // if (!$storeConnection) {
-        //     console.log("$storeConnection needs to be setup again");
-        //     closeDb();
-        //     console.log("$dbConnection should be closed: ");
-        //     console.log(unwrap($dbConnection));
-        //     // open new version of the database
-        //     $dbConnection = await openDB(__DBNAME__, intDbVersion, {
-        //         upgrade($dbConnection) {
-        //             console.log("upgrade $dbConnection again");
-        //             setupStore($dbConnection);
-        //         },
-        //         blocked() {
-        //             console.log('blocked $storeConnection empty');
-        //         },
-        //         blocking() {
-        //             console.log('blocking $storeConnection empty');
-        //         },
-        //         terminated() {
-        //             console.log('terminated $storeConnection empty');
-        //         }
-		// 	});
-		// 	console.log("$storeConnection v2: ");
-        // 	console.log(unwrap($storeConnection));
-        // }
-        return $dbConnection;
-    }
-	tryDbOpen().then(($dbConnection) => {
-		console.log('tryDbOpen opened the $dbConnection');
-    })
-    .catch((err) => {
-      console.log(err +': tryDbOpen $dbConnection key not found');
-	});
-	
 	import Visits from './Visits.svelte';
 	import Articles from  './Articles.svelte';
 	import Drawer from './Drawer.svelte';
@@ -116,15 +19,20 @@ March 24, 2020 - wpg
 	const options = [
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
-		{ page: 'idb Test',   component: Drawer   },
-		{ page: 'Data table',   component: Articles   },
+		{ page: 'IndexedDb Test',   component: Drawer   },
+		// { page: 'Data table',   component: Articles   },
 	];
 	let selected = options[0];
 
-	// if the session is set then go back to last component on refresh
-	if (sessionStorage.getItem("selectedComponentId")) {
-		selected = options[sessionStorage.getItem("selectedComponentId")];
-	}
+	/**
+	 *  NOTE: We could save a session variable 'selectedComponentId' to keep track of the last 'tab/page' the user was on if the app refreshes,
+	 * HOWEVER indexedDb will throw a transaction error if you load a component that tries to get data from the database before all of the code
+	 * to establish the database connection is complete in this script. That is why I have the app. load initially on a component that DOES NOT
+	 * pull from indexedDb. 
+	 */
+	// if (sessionStorage.getItem("selectedComponentId")) {
+	// 	selected = options[sessionStorage.getItem("selectedComponentId")];
+	// }
 	
 	let intSelected = 0;
 	let strActiveComponent;
@@ -136,7 +44,7 @@ March 24, 2020 - wpg
 		console.log("changeComponent");
 		selected = options[event.srcElement.id];
 		intSelected = event.srcElement.id;
-		sessionStorage.setItem("selectedComponentId", event.srcElement.id);	// saving the component ID to a session
+		//sessionStorage.setItem("selectedComponentId", event.srcElement.id);	// saving the component ID to a session
 	}
 
 	// just some testing code to send console messages to the browser window
@@ -187,19 +95,20 @@ window.addEventListener("load", () => {
 });
 
 // basic indexedDB API connections
-var openRequest = indexedDB.open('test_db', 1);
+var openRequest = indexedDB.open(strDbName_ProductStore, 1);
 
 openRequest.onupgradeneeded = function(e) {
-  var $basicDbConnection = e.target.result;
+  var $objProductStoreDbConn = e.target.result;
   console.log('running onupgradeneeded');
-  if (!$basicDbConnection.objectStoreNames.contains('store')) {
-    var storeOS = $basicDbConnection.createObjectStore('store',
+  if (!$objProductStoreDbConn.objectStoreNames.contains(strStoreName_Produce)) {
+    var storeOS = $objProductStoreDbConn.createObjectStore(strStoreName_Produce,
       {keyPath: 'id', autoIncrement:true});
   }
 };
 openRequest.onsuccess = function(e) {
   console.log('running onsuccess');
-  $basicDbConnection = e.target.result;
+  $objProductStoreDbConn = e.target.result;
+  console.log(e.target.result);
   addItem();
 };
 openRequest.onerror = function(e) {
@@ -208,8 +117,8 @@ openRequest.onerror = function(e) {
 };
 
 function addItem() {
-  var transaction = $basicDbConnection.transaction(['store'], 'readwrite');
-  var store = transaction.objectStore('store');
+  var transaction = $objProductStoreDbConn.transaction([strStoreName_Produce], 'readwrite');
+  var store = transaction.objectStore(strStoreName_Produce);
   var item = {
     name: 'banana',
     price: '$2.99',
