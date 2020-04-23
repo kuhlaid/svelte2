@@ -29,6 +29,7 @@
     "svelte-formly": "0.0.17",
     "svelte-table": "^0.1.8",
     "terser": "^4.6.10",
+    "uuid": "^7.0.3",
     "workbox-build": "^5.1.2"
   }
 }

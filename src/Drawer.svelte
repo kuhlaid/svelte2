@@ -8,7 +8,8 @@
 <script>
     import { strStoreName_Produce,objAppDbConn } from './stores.js';
     import ProduceList from "./ProduceList.tpl.svelte";   // pulling a list of data from our indexeddb data table
-    
+    import { v1 as uuidv1 } from 'uuid';    // timestamp based ID (ideally we might want to consider using v5 with URL based so client side generated UUID does not collide with server side generated UUID, although we should be able to achieve the same thing with v1 using specific random numbers for client=0 and server=1 in the options)
+
     let produceRows=[];
 
     // simple $objAppDbConn connection (not using idb plugin)
@@ -16,6 +17,7 @@
         var transaction = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite');
         var store = transaction.objectStore(strStoreName_Produce);
         var item = {
+            uuid: uuidv1(),
             name: 'banana',
             price: '$2.99',
             description: 'It is a purple banana!',

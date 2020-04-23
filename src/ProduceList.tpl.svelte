@@ -9,15 +9,15 @@
     // define data column configs
     const columns = [
     {
-        key: "id",
+        key: "uuid",
         title: "Identifier",
-        value: v => v.id,
+        value: v => v.uuid,
         sortable: true,
         // filterOptions: rows => {
         // // generate groupings of 0-10, 10-20 etc...
         // let nums = {};
         // rows.forEach(row => {
-        //     let num = Math.floor(row.id / 10);
+        //     let num = Math.floor(row.uuid / 10);
         //     if (nums[num] === undefined)
         //     nums[num] = { name: `${num * 10} to ${(num + 1) * 10}`, value: num };
         // });

@@ -6,8 +6,7 @@
     Check if the user has an active session with a back-end API and save session.
 -->
 <script>
-    import { objOfflineStatus,strStoreAppSettings,objAppDbConn } from './stores.js';
-    //import { readable, writable } from "svelte/store";  // we want to use both read-only and writable promises to local storage
+    import { strStoreName_Produce, strStoreRawApiData,objOfflineStatus,strStoreAppSettings,objAppDbConn } from './stores.js';
     let strApiUrl; // this will be the read-only store promise we read from the database but do not change
     let strApiUrlReadable='';  // this is the prior URL value
     let objApiData=''; // this will hold any data we retrieve from the server API
@@ -17,14 +16,8 @@
     let blnGetApiData;  // determine if we can make calls to the API or not (if we are offline)
     let strGetApiBtnClass='primary';
 
-    function btnSaveClick_ApiUrl() {
-        putApiAddress();
-    }
-        
-    // here get the API token we have stored in local storage
-    function getApiToken() {
-        console.log("getApiToken");
-    }
+    function btnSaveClick_ApiUrl() {putApiAddress();}
+    function getApiToken() {console.log("getApiToken");} // here get the API token we have stored in indexedDb in order to place API calls
 
     // here we first need to check the API tokens match so we send the token we have to the API
     function btnGetApiDataClick() {
@@ -32,6 +25,7 @@
         getApiData();
     }
 
+    // request data from the API
     function getApiData() {
         objApiData = '<div class="spinner-border" role="status"><span class="sr-only">Checking the API, please wait...</span></div>';   // note the '@html' in the output
         // note we want to use a GET request because API authentication will take place through the API server
@@ -52,8 +46,8 @@
 
                 // Examine the text in the response (Note: we should not allow submission of a blank field so we disable the submit button unless something is entered)
                 response.json().then(function(data) {
-                    objApiData = JSON.stringify(data);
-                    console.log(data);
+                    objApiData = JSON.stringify(data);  // console.log(data);
+                    putRawApiData(data);
                 });
             }
         )
@@ -61,7 +55,36 @@
             console.log('Fetch Error :-S', err);
             objApiData = '';
         });
+    }
 
+    // save raw API data 
+    function putRawApiData(objData){
+        // parse the objData from the server; we are mainly looking for data and a data dictionary
+        var objectStore = $objAppDbConn.transaction([strStoreRawApiData], 'readwrite').objectStore(strStoreRawApiData);
+        var request = objectStore.put(objData);
+
+        request.onerror = function(e) {
+            console.log('Error', e.target.error.name);
+        };
+        request.onsuccess = function(e) {
+            console.log('saved API data');
+            var db = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite').objectStore(strStoreName_Produce);
+            putApiData([objData.api.data], db, () => {});
+        };
+        
+    }
+
+    // extract data fields from API data 
+    function putApiData(strData, objectStore, callback){
+        var dataArray = JSON.parse(strData);
+        dataArray.forEach(value => {
+            console.log(value);
+            var request = objectStore.put(value);
+        })
+
+        objectStore.oncomplete = function(event) {
+            callback();
+        }       
     }
 
     // pull the API address from the local db
@@ -81,16 +104,17 @@
         };
     }
 
-$: {
-    if (strApiUrlReadable && $objOfflineStatus.status=='online') {
-        blnGetApiData = true;
-        strGetApiBtnClass = 'primary';
+    // here we react to changes in our offline status in order to enable or disable our API server requests (which are only performed if the network is online)
+    $: {
+        if (strApiUrlReadable && $objOfflineStatus.status=='online') {
+            blnGetApiData = true;
+            strGetApiBtnClass = 'primary';
+        }
+        else {
+            blnGetApiData = false;
+            strGetApiBtnClass = 'light';
+        }
     }
-    else {
-        blnGetApiData = false;
-        strGetApiBtnClass = 'light';
-    }
-}
 
     // update the API address in the local db
     function putApiAddress() {

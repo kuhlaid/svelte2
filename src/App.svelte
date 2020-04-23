@@ -8,7 +8,7 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
-	import { objOfflineStatus,strAppDbName,strStoreName_Produce,strFormConfig_Produce,strStoreAppSettings,objAppDbConn } from './stores.js';
+	import { objOfflineStatus,strAppDbName,strStoreName_Produce,strFormConfig_Produce,strStoreAppSettings,strStoreRawApiData,objAppDbConn } from './stores.js';
 
 	import Visits from './Visits.svelte';
 	import DFG from  './DFG.svelte';
@@ -102,13 +102,16 @@ openRequest.onupgradeneeded = function(e) {
   console.log('running onupgradeneeded');
   // here we need to connect to each of the data tables locally so we can use them throughout the app
   if (!$objAppDbConn.objectStoreNames.contains(strStoreName_Produce)) {
-    $objAppDbConn.createObjectStore(strStoreName_Produce,{keyPath: 'id', autoIncrement:true});
+    $objAppDbConn.createObjectStore(strStoreName_Produce,{keyPath: 'uuid'});
   }
   if (!$objAppDbConn.objectStoreNames.contains(strFormConfig_Produce)) {
-	$objAppDbConn.createObjectStore(strFormConfig_Produce,{keyPath: 'id', autoIncrement:true});
+	$objAppDbConn.createObjectStore(strFormConfig_Produce,{keyPath: 'uuid'});
   }
   if (!$objAppDbConn.objectStoreNames.contains(strStoreAppSettings)) {
 	$objAppDbConn.createObjectStore(strStoreAppSettings,{keyPath: 'name'});
+  }
+  if (!$objAppDbConn.objectStoreNames.contains(strStoreRawApiData)) {
+	$objAppDbConn.createObjectStore(strStoreRawApiData,{keyPath: 'api.uuid'});
   }
   
 };
