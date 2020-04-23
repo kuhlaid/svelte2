@@ -1,5 +1,5 @@
 ## Getting started
-The easiest way to begin using this code is to simply fork it to your personal GitHub project space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action. 
+The easiest way to begin using this code is to simply fork it to your personal GitHub project space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action. As for working with this code locally, for newbies this app is built from Node.js so will want to have the latest version of Node.js installed along with npm.
 
 ## Screenshots from version v0.1.8
 > ![kuhlaid-svelte2 v0 1 8](https://user-images.githubusercontent.com/41551429/79169094-8448b280-7db9-11ea-8ecf-357238ba50dd.png)
@@ -10,10 +10,27 @@ The easiest way to begin using this code is to simply fork it to your personal G
 
 
 ## Notes about the app
-This app is only built and tested against the Chrome browser (as of writing this, version 80). There are no special configuration files that need to be adjuested to run the code locally, however the rollup.config.js contains a 'fileVersion' variable for clearing the application cache in the browser. You need to change this variable when updating a build for the application in order force the app to refresh in the browser (unless you manually clear the browser cache).
+This app is only built and tested against the Chrome browser (as of writing this, version 80). There are no special configuration files that need to be adjuested to run the code locally, however the rollup.config.js contains a 'fileVersion' variable for clearing the application cache in the browser. You need to change this variable value 
+(within the .env file) when updating a build for the application in order force the app to refresh in the browser (unless you manually clear the browser cache - which should only be done in development).
 
+## @ToDo
+- should probably create a local db table that keeps track of all of the data API tables available to access and then 
+generate a dynamic selection list on the ApiSettings component for selection which API to pull data from, when it was last
+pulled and when data was last pushed? 
+- would be nice if the Svelte store variables could be created dynamically based on the data API configuration; I suppose this could be set within the .env config
+- link data rows with a form configuration version so that when we need to view or edit the data, the correct version of the 
+data configuration is used
 
 ## Change log
+April 22, 2020
+- After taking time to explore the workings of a Laravel data API I thought it would be appropriate 
+to look at dynamic form generation within Svelte. The reason for this is I do not want to hard-code a bunch of forms
+within this front-end app. I want the back-end data API to define the data through which our front-end will build views and forms to work with the data and send that configuration via a JSON formatted object to our front-end app.
+The svelte-formly module is a good starting point as it dynamically builds a form based on a JSON formatted configuration.
+- Beginning to move the application settings from localStorage to indexedDb since the values in indexedDb do not appear
+editable from the browser developer tools
+- Moved the 'online' status to the Svelte store so the status is accessible across components for disabling buttons to the server API for instance when offline
+
 April 13, 2020
 - I spent a week on indexedDb testing and pulling my hair out wondering why I couldn't force a indexedDb connection to close (even when there were no transactions taking place) and then reopen the db connection. The API makes it rather clear this is not possible. Closing a db connection (using the close method) within your code is fairly worthless and does not mean the browser has forgotten the browser tab that opened the connection. The browser still locks the connection for reuse in the same session by the same point of origin as they like to say in the indexedDb documentation. IndexedDb is useless unless you are making a simple counter app or add/delete notes app, which all of the example indexedDb code consists of. So while there is lot of boasting about all the features of indexedDb, it doesn't cut it for serious production apps. Blah.
 - With that said I went back to the drawing board to try a different approach. I ditched the idb plugin and opted for a direct indexedDb API connection without the Promises library. Instead of simply trying to open the database connection within my Svelte sub-components, I open it under the main App.svelte component and save the database connection to the Svelte store (this step was important). This new approach improved things quite a bit since I was no longer seeing the database connection loss when navigating between components/pages. So as long as the browser doesn't drop the db connection for some reason I should be able to work with this approach. NOTE: One thing that is super important with regards to when you setup the database connection is that it must be setup before attempting any transactions. This is why I have the Intro component/page load first in order to ensure my database connection is in place before loading any of the other components that try to pull data from the database.***
@@ -69,10 +86,5 @@ March 25, 2020
 npx degit sveltejs/template svelte2
 cd svelte2
 npm install
-npm install bootstrap
-npm install rollup-plugin-copy
-npm install workbox-sw
-npm install gulp
-npm install workbox-build
-npm install rollup-plugin-workbox-build
+npm install (some other stuff to get going)
 ```

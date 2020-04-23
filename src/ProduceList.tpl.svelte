@@ -2,7 +2,7 @@
     This is simply a template for the produce data table.
 -->
 <script>
-    import { strStoreName_Produce,objProductStoreDbConn } from './stores.js';   // get the indexedDb connection from the Svelte store
+    import { strStoreName_Produce,objAppDbConn } from './stores.js';   // get the indexedDb connection from the Svelte store
     import SvelteTable from "svelte-table";   // used to build our data table
     export let rows = [];   // data for the table
 

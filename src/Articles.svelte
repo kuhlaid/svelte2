@@ -7,7 +7,7 @@ Things to think about
 This may allow for dynamically generated lists from local storage?
 -->
 <script>
-  import { strStoreName_Produce,objProductStoreDbConn } from './stores.js';
+  import { strStoreName_Produce,objAppDbConn } from './stores.js';
   //import SvelteTable from "svelte-table";   // used to build our data table
   import ProduceList from "./ProduceList.tpl.svelte";   // pulling a list of data from our indexeddb data table
   

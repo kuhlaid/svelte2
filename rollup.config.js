@@ -5,6 +5,8 @@ import livereload from 'rollup-plugin-livereload';
 import terser from 'terser';	// using the basic terser since we need to run this after processing the build files
 import fs from 'fs-extra';	// used in connection with terser to update the fileVersion string in our build files
 
+import 'dotenv/config';	// used to pull our app constants from the .env file
+
 // cache files offline
 import workbox from 'rollup-plugin-workbox-build'
 
@@ -15,7 +17,7 @@ import copy from 'rollup-plugin-copy';
 import replace from 'replace-in-file';	
 
 const production = !process.env.ROLLUP_WATCH;
-const fileVersion = 'v0.1.3323';	// change this when we want to update the file cache constant (__cVersion__)
+const fileVersion = process.env.FILE_VERSION;	//'v0.1.3323';	// change this when we want to update the file cache constant (__cVersion__)
 
 export default {
 	input: 'src/main.js',
@@ -155,6 +157,7 @@ function runCodeVersionReplaceOnStaging() {
 		from: /__cVersion__/g,
 		to: fileVersion,
 		});
+
 	// var code = fs.readFileSync("staging/index.html", "utf8");
 	// console.log(code);
 	console.log(replaceResults);
@@ -180,15 +183,16 @@ function serve(prodBuild=false){
 					});
 				}
 
-				// this function simply replaces text in our build files to help clear the file cache (not local storage)
+				// this function simply replaces text in our build files to set application settings from the .env file
 				replace.sync({
 					files: [
 						'public/sw.js',
 						'public/manifest.json',
-						'public/build/bundle.js'
+						'public/build/bundle.js',
+						'public/build/bundle.js.map'
 					],
-					from: /__cVersion__/g,
-					to: fileVersion,
+					from: [/__cVersion__/g, /OAUTH_CLIENT_ID/g, /OAUTH_CLIENT_SECRET/g],
+					to: [fileVersion, process.env.OAUTH_CLIENT_ID, process.env.OAUTH_CLIENT_SECRET],
 				  });
 
 				//console.log('terser me');

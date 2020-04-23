@@ -8,19 +8,19 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
-	import { strDbName_ProductStore,strStoreName_Produce,objProductStoreDbConn } from './stores.js';
+	import { objOfflineStatus,strAppDbName,strStoreName_Produce,strFormConfig_Produce,strStoreAppSettings,objAppDbConn } from './stores.js';
 
 	import Visits from './Visits.svelte';
-	import Articles from  './Articles.svelte';
+	import DFG from  './DFG.svelte';
 	import Drawer from './Drawer.svelte';
-	import ApiSettings from './ApiSettings.svelte';
+	import ApiSettings from './ApiSettingsIdb.svelte';
 
 	// these are our 'pages'
 	const options = [
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
 		{ page: 'IndexedDb Test',   component: Drawer   },
-		// { page: 'Data table',   component: Articles   },
+		{ page: 'Dynamic form generation',   component: DFG   },
 	];
 	let selected = options[0];
 
@@ -61,7 +61,7 @@ March 24, 2020 - wpg
 	// 	consolelogs += 'err----'+(JSON && JSON.stringify ? JSON.stringify(arguments) : arguments);
 	// };
 
-let offlineCheck = {
+	$objOfflineStatus = {
 		bsAlert: 'alert-light',
 		statusColor: '',
 		status: 'online'
@@ -70,14 +70,14 @@ let offlineCheck = {
 function onlineStatus(blnStatus) {
   if (blnStatus) {
 	//console.log('online');
-	offlineCheck.statusColor='text-success';
-	offlineCheck.bsAlert='alert-light';
-    offlineCheck.status='online';
+	$objOfflineStatus.statusColor='text-success';
+	$objOfflineStatus.bsAlert='alert-light';
+    $objOfflineStatus.status='online';
   } else {
 	//console.log('offline');
-	offlineCheck.bsAlert='alert-danger';
-	offlineCheck.statusColor='';
-    offlineCheck.status='offline';
+	$objOfflineStatus.bsAlert='alert-danger';
+	$objOfflineStatus.statusColor='';
+    $objOfflineStatus.status='offline';
   }
 }
 
@@ -95,21 +95,28 @@ window.addEventListener("load", () => {
 });
 
 // basic indexedDB API connections
-var openRequest = indexedDB.open(strDbName_ProductStore, 1);
+var openRequest = indexedDB.open(strAppDbName, 1);
 
 openRequest.onupgradeneeded = function(e) {
-  var $objProductStoreDbConn = e.target.result;
+  var $objAppDbConn = e.target.result;
   console.log('running onupgradeneeded');
-  if (!$objProductStoreDbConn.objectStoreNames.contains(strStoreName_Produce)) {
-    var storeOS = $objProductStoreDbConn.createObjectStore(strStoreName_Produce,
-      {keyPath: 'id', autoIncrement:true});
+  // here we need to connect to each of the data tables locally so we can use them throughout the app
+  if (!$objAppDbConn.objectStoreNames.contains(strStoreName_Produce)) {
+    $objAppDbConn.createObjectStore(strStoreName_Produce,{keyPath: 'id', autoIncrement:true});
   }
+  if (!$objAppDbConn.objectStoreNames.contains(strFormConfig_Produce)) {
+	$objAppDbConn.createObjectStore(strFormConfig_Produce,{keyPath: 'id', autoIncrement:true});
+  }
+  if (!$objAppDbConn.objectStoreNames.contains(strStoreAppSettings)) {
+	$objAppDbConn.createObjectStore(strStoreAppSettings,{keyPath: 'name'});
+  }
+  
 };
 openRequest.onsuccess = function(e) {
   console.log('running onsuccess');
-  $objProductStoreDbConn = e.target.result;
+  $objAppDbConn = e.target.result;
   console.log(e.target.result);
-  addItem();
+  //addItem();
 };
 openRequest.onerror = function(e) {
   console.log('onerror!');
@@ -117,7 +124,7 @@ openRequest.onerror = function(e) {
 };
 
 function addItem() {
-  var transaction = $objProductStoreDbConn.transaction([strStoreName_Produce], 'readwrite');
+  var transaction = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite');
   var store = transaction.objectStore(strStoreName_Produce);
   var item = {
     name: 'banana',
@@ -162,7 +169,7 @@ function addItem() {
   </div>
 
 	<!-- Simple network status notification -->
-	<div class="alert {offlineCheck.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{offlineCheck.statusColor}">{offlineCheck.status}</strong></div>
+	<div class="alert {$objOfflineStatus.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{$objOfflineStatus.statusColor}">{$objOfflineStatus.status}</strong></div>
 
   <div class="alert alert-light p-2">(__cVersion__) The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
 </div>

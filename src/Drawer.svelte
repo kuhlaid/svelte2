@@ -6,14 +6,14 @@
     Should use a format like https://codepen.io/xon5/pen/wYMezq to handle the $dbConnection code
 -->
 <script>
-    import { strStoreName_Produce,objProductStoreDbConn } from './stores.js';
+    import { strStoreName_Produce,objAppDbConn } from './stores.js';
     import ProduceList from "./ProduceList.tpl.svelte";   // pulling a list of data from our indexeddb data table
     
     let produceRows=[];
 
-    // simple $objProductStoreDbConn connection (not using idb plugin)
+    // simple $objAppDbConn connection (not using idb plugin)
     function addItem() {
-        var transaction = $objProductStoreDbConn.transaction([strStoreName_Produce], 'readwrite');
+        var transaction = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite');
         var store = transaction.objectStore(strStoreName_Produce);
         var item = {
             name: 'banana',
@@ -34,7 +34,7 @@
     }
 
     function getProduce() {
-        var transaction = $objProductStoreDbConn.transaction([strStoreName_Produce], 'readwrite');
+        var transaction = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite');
         var store = transaction.objectStore(strStoreName_Produce);
         var request = store.getAll();
 
