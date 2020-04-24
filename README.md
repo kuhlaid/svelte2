@@ -26,6 +26,8 @@ data configuration is used
 April 23, 2020
 - One of the issues with an offline PWA is how do you differentiate data entries created through the PWA while offline and data retrieved from the data server API? UUID is useful in this instance because in server-side only data entry, primary keys for records are generally auto-incremented integers, however this is a problem with client-side and server-side data entry happening simultaniously. For this app we are using timestamp based UUID for record identifying. Data retrieved from the server-side and updated locally on the client side will simply keep the same UUID sent from the server, and new client-side records will contain a unique UUID to be pushed to the server. Adding a uuid module to the project code.
 - Finished setup of a basic server data API GET request and parsing of the returned JSON to save unique data records to the browser as well as the data dictionary and API definitions.
+- Updated the sample dynamic form generation component to pull the form definition from our data API server instead of
+hard-coding the form field definitions into the component.
 
 April 22, 2020
 - After taking time to explore the workings of a Laravel data API I thought it would be appropriate 

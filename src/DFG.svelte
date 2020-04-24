@@ -3,95 +3,27 @@
 module for generating dynamic forms within Svelte.
 -->
 <script>
+  import { strApiConfig_Produce,objAppDbConn } from './stores.js';
   import { get } from "svelte/store";
   import { valuesForm, Field } from "svelte-formly";
+  let fields;
+  // pull the dynamic form generation config from the local db
+  function getFormFields() {
+      var objectStore = $objAppDbConn.transaction([strApiConfig_Produce], 'readonly').objectStore(strApiConfig_Produce);
+      var request = objectStore.get('1');
 
-  const fields = [
-    {
-      type: "color",
-      name: "color",
-      id: "color",
-      label: "Color Form"
-    },
-    {
-      type: "text",
-      name: "firstname",
-      label: "First name:",
-      value: "",
-      id: "firstname",
-      class: ["form-control"],
-      placeholder: "Tap your first name",
-      validation: ["required", "min:6"],
-      messages: {
-        required: "Firstname field is required!",
-        min: "First name field must have more that 6 caracters!"
-      },
-      description: {
-        class: ["custom-class-desc"],
-        text: "(this needs something)"
-      }
-    },
-    {
-      prefix: {
-        class: ["custom-form-group"]
-      },
-      type: "text",
-      name: "lastname",
-      value: "",
-      id: "lastname",
-      placeholder: "Tap your lastname",
-      description: {
-        class: ["custom-class-desc"],
-        text: "Custom text for description"
-      }
-    },
-    {
-      type: "email",
-      name: "email",
-      value: "",
-      id: "email",
-      placeholder: "Tap your email",
-      validation: ["required", "email"]
-    },
-    {
-      type: "radio",
-      name: "gender",
-      items: [
-        {
-          id: "female",
-          value: "female",
-          title: "Female"
-        },
-        {
-          id: "male",
-          value: "male",
-          title: "Male"
-        }
-      ]
-    },
-    {
-      type: "select",
-      name: "city",
-      id: "city",
-      label: "City",
-      validation: ["required"],
-      options: [
-        {
-          value: null,
-          title: "-- Select a city --"
-        },
-        {
-          value: 1,
-          title: "Agadir"
-        },
-        {
-          value: 2,
-          title: "Casablanca"
-        }
-      ]
-    }
-  ];
-
+      request.onerror = function(e) {
+          console.log('Error', e.target.error.name);
+      };
+      request.onsuccess = function(e) {
+          if (request.result.fields) {
+              //console.log(request.result.fields);
+              fields = JSON.parse(request.result.fields);
+          }
+      };
+  }
+  getFormFields();
+  
   let message = "";
   let values = {};
 
@@ -105,12 +37,9 @@ module for generating dynamic forms within Svelte.
   }
 </script>
 
-<h1>Svelte Formly</h1>
+<div>Dynamic form generation</div>
 <h3 class="alert alert-warning">{message}</h3>
-<form
-  on:submit|preventDefault="{onSubmit}"
-  class="custom-form"
->
+<form on:submit|preventDefault="{onSubmit}" class="custom-form">
   <Field {fields} />
   <button class="btn btn-primary" type="submit">Submit</button>
 </form>
