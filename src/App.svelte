@@ -8,7 +8,7 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
-	import { objOfflineStatus,strAppDbName,strStoreName_Produce,strFormConfig_Produce,strStoreAppSettings,strStoreRawApiData,objAppDbConn } from './stores.js';
+	import { objOfflineStatus,strAppDbName,strStoreName_Produce,strApiConfig_Produce,strStoreAppSettings,strStoreRawApiData,objAppDbConn } from './stores.js';
 
 	import Visits from './Visits.svelte';
 	import DFG from  './DFG.svelte';
@@ -20,7 +20,7 @@ March 24, 2020 - wpg
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
 		{ page: 'IndexedDb Test',   component: Drawer   },
-		{ page: 'Dynamic form generation',   component: DFG   },
+		{ page: 'DFG',   component: DFG   },
 	];
 	let selected = options[0];
 
@@ -104,14 +104,14 @@ openRequest.onupgradeneeded = function(e) {
   if (!$objAppDbConn.objectStoreNames.contains(strStoreName_Produce)) {
     $objAppDbConn.createObjectStore(strStoreName_Produce,{keyPath: 'uuid'});
   }
-  if (!$objAppDbConn.objectStoreNames.contains(strFormConfig_Produce)) {
-	$objAppDbConn.createObjectStore(strFormConfig_Produce,{keyPath: 'uuid'});
+  if (!$objAppDbConn.objectStoreNames.contains(strApiConfig_Produce)) {
+	$objAppDbConn.createObjectStore(strApiConfig_Produce,{keyPath: 'id'});
   }
   if (!$objAppDbConn.objectStoreNames.contains(strStoreAppSettings)) {
 	$objAppDbConn.createObjectStore(strStoreAppSettings,{keyPath: 'name'});
   }
   if (!$objAppDbConn.objectStoreNames.contains(strStoreRawApiData)) {
-	$objAppDbConn.createObjectStore(strStoreRawApiData,{keyPath: 'api.uuid'});
+	$objAppDbConn.createObjectStore(strStoreRawApiData,{keyPath: 'api.config.id'});
   }
   
 };

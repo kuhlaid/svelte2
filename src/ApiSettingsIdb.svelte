@@ -6,7 +6,7 @@
     Check if the user has an active session with a back-end API and save session.
 -->
 <script>
-    import { strStoreName_Produce, strStoreRawApiData,objOfflineStatus,strStoreAppSettings,objAppDbConn } from './stores.js';
+    import { strStoreName_Produce, strStoreRawApiData, objOfflineStatus, strStoreAppSettings, strApiConfig_Produce, objAppDbConn } from './stores.js';
     let strApiUrl; // this will be the read-only store promise we read from the database but do not change
     let strApiUrlReadable='';  // this is the prior URL value
     let objApiData=''; // this will hold any data we retrieve from the server API
@@ -70,6 +70,7 @@
             console.log('saved API data');
             var db = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite').objectStore(strStoreName_Produce);
             putApiData([objData.api.data], db, () => {});
+            putApiConfig(objData.api.config);
         };
         
     }
@@ -85,6 +86,19 @@
         objectStore.oncomplete = function(event) {
             callback();
         }       
+    }
+
+    // extract API config from API data 
+    function putApiConfig(objData){
+        var objectStore = $objAppDbConn.transaction([strApiConfig_Produce], 'readwrite').objectStore(strApiConfig_Produce);
+        var request = objectStore.put(objData);
+
+        request.onerror = function(e) {
+            console.log('Error', e.target.error.name);
+        };
+        request.onsuccess = function(e) {
+            console.log('saved API config');
+        };      
     }
 
     // pull the API address from the local db
