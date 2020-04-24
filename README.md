@@ -1,12 +1,15 @@
 ## Getting started
 The easiest way to begin using this code is to simply fork it to your personal GitHub project space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action. As for working with this code locally, for newbies this app is built from Node.js so will want to have the latest version of Node.js installed along with npm.
 
-## Screenshots from version v0.1.8
-> ![kuhlaid-svelte2 v0 1 8](https://user-images.githubusercontent.com/41551429/79169094-8448b280-7db9-11ea-8ecf-357238ba50dd.png)
+## Screenshots from version v0.2.0
+> ![intro](https://user-images.githubusercontent.com/41551429/80168316-86c4bc80-85b0-11ea-85a7-96f30720d370.png)
 
-> ![kuhlaid-svelte2-api v0 1 8](https://user-images.githubusercontent.com/41551429/79169311-19e44200-7dba-11ea-8516-154cc8f537c6.png)
+> ![api](https://user-images.githubusercontent.com/41551429/80168314-862c2600-85b0-11ea-94ae-ddf7d5151e0b.png)
 
-> ![kuhlaid-svelte2-db v0 1 8](https://user-images.githubusercontent.com/41551429/79169339-308a9900-7dba-11ea-96c6-0c8fea0ac0f0.png)
+> ![table](https://user-images.githubusercontent.com/41551429/80168313-862c2600-85b0-11ea-9bb6-13cd1d81d8d4.png)
+
+> ![dfg](https://user-images.githubusercontent.com/41551429/80168312-85938f80-85b0-11ea-84d9-85439a903a48.png)
+
 
 
 ## Notes about the app
