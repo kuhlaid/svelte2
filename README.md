@@ -23,9 +23,12 @@ pulled and when data was last pushed?
 - would be nice if the Svelte store variables could be created dynamically based on the data API configuration; I suppose this could be set within the .env config
 - link data rows with a form configuration version so that when we need to view or edit the data, the correct version of the 
 data configuration is used
-- add UUID generator options for differentiating between client and server and add this to the application config notes
+- need to determine the form config version to use when adding new records (need to save an app setting key=>value pair whenever an API is downloaded from the server or data is pushed so we know the latest version to use)
 
 ## Change log
+April 25, 2020
+- Modifying the data table to respond to a user clicking a record row/cell in order to load the record details into the record edit form. Also modifying the dynamic form generator to fill the form with a record selected from the data table.
+
 April 23, 2020
 - One of the issues with an offline PWA is how do you differentiate data entries created through the PWA while offline and data retrieved from the data server API? UUID is useful in this instance because in server-side only data entry, primary keys for records are generally auto-incremented integers, however this is a problem with client-side and server-side data entry happening simultaniously. For this app we are using timestamp based UUID for record identifying. Data retrieved from the server-side and updated locally on the client side will simply keep the same UUID sent from the server, and new client-side records will contain a unique UUID to be pushed to the server. Adding a uuid module to the project code.
 - Finished setup of a basic server data API GET request and parsing of the returned JSON to save unique data records to the browser as well as the data dictionary and API definitions.

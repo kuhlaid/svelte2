@@ -5,9 +5,16 @@
     import { strStoreName_Produce,objAppDbConn } from './stores.js';   // get the indexedDb connection from the Svelte store
     import SvelteTable from "svelte-table";   // used to build our data table
     export let rows = [];   // data for the table
-
+    
     // define data column configs
     const columns = [
+    {
+        key: "editRecord",
+        title: "Edit record",
+        value: v => '<button class="btn btn-primary">Edit a row to indexedDb</button>',
+        sortable: false,
+        headerClass: " text-left active "
+    },
     {
         key: "uuid",
         title: "Identifier",
@@ -29,8 +36,7 @@
         // },
         // filterValue: v => Math.floor(v.id / 10),
         headerClass: " text-left active "
-    }
-    ,
+    },
     {
         key: "name",
         title: "Produce",
@@ -77,4 +83,4 @@
     }
     ];
 </script>
-<SvelteTable columns="{columns}" rows="{rows}" classNameTable="table table-hover table-bordered"></SvelteTable>
+<SvelteTable columns="{columns}" rows="{rows}" classNameTable="table table-hover table-bordered" on:clickCell />

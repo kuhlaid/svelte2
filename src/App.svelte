@@ -20,8 +20,8 @@ March 24, 2020 - wpg
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
 		{ page: 'IndexedDb Test',   component: Drawer   },
-		{ page: 'DFG',   component: DFG   },
 	];
+	//{ page: 'DFG',   component: DFG   },
 	let selected = options[0];
 
 	/**
