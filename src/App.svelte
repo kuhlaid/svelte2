@@ -8,7 +8,7 @@ March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
 -->
 <script>
-	import { objOfflineStatus,strAppDbName,strStoreName_Produce,strApiConfig_Produce,strStoreAppSettings,strStoreRawApiData,objAppDbConn } from './stores.js';
+	import { objOfflineStatus, objAppDbConn } from './stores.js';
 
 	import Visits from './Visits.svelte';
 	import DFG from  './DFG.svelte';
@@ -19,7 +19,7 @@ March 24, 2020 - wpg
 	const options = [
 		{ page: 'Intro',   component: Visits   },
 		{ page: 'API Settings',   component: ApiSettings   },
-		{ page: 'IndexedDb Test',   component: Drawer   },
+		{ page: 'Data drawer',   component: Drawer   },
 	];
 	//{ page: 'DFG',   component: DFG   },
 	let selected = options[0];
@@ -81,8 +81,6 @@ function onlineStatus(blnStatus) {
   }
 }
 
-
-
 // listen for changes in the network status of the app
 window.addEventListener("load", () => {
   onlineStatus(navigator.onLine); // check for online network status when the app loads ...
@@ -95,56 +93,42 @@ window.addEventListener("load", () => {
 });
 
 // basic indexedDB API connections
-var openRequest = indexedDB.open(strAppDbName, 1);
+var openRequest = indexedDB.open("__INDEXEDDB_NAME__", 1);
 
 openRequest.onupgradeneeded = function(e) {
-  var $objAppDbConn = e.target.result;
-  console.log('running onupgradeneeded');
-  // here we need to connect to each of the data tables locally so we can use them throughout the app
-  if (!$objAppDbConn.objectStoreNames.contains(strStoreName_Produce)) {
-    $objAppDbConn.createObjectStore(strStoreName_Produce,{keyPath: 'uuid'});
-  }
-  if (!$objAppDbConn.objectStoreNames.contains(strApiConfig_Produce)) {
-	$objAppDbConn.createObjectStore(strApiConfig_Produce,{keyPath: 'id'});
-  }
-  if (!$objAppDbConn.objectStoreNames.contains(strStoreAppSettings)) {
-	$objAppDbConn.createObjectStore(strStoreAppSettings,{keyPath: 'name'});
-  }
-  if (!$objAppDbConn.objectStoreNames.contains(strStoreRawApiData)) {
-	$objAppDbConn.createObjectStore(strStoreRawApiData,{keyPath: 'api.config.id'});
-  }
-  
+	$objAppDbConn = e.target.result;
+	//console.log('running onupgradeneeded');
+
+	// connect to our core tables
+	var dbCoreTablesArray = __ARRAY_DB_CORE_TABLES__;
+	dbCoreTablesArray.forEach(function(dbTable) {
+		//console.log(dbTable.name);
+		// here we need to connect to each of the data tables locally so we can use them throughout the app
+		if (!$objAppDbConn.objectStoreNames.contains(dbTable.name)) {
+			$objAppDbConn.createObjectStore(dbTable.name,{keyPath: dbTable.keypath});
+		}
+	});  
+
+	// dynamically connect to each of our database table connections defines in the .env file
+	var dbTablesArray = __ARRAY_DB_TABLES__;
+	dbTablesArray.forEach(function(dbTable) {
+		//console.log(dbTable.name);
+		// here we need to connect to each of the data tables locally so we can use them throughout the app
+		if (!$objAppDbConn.objectStoreNames.contains(dbTable.name)) {
+			$objAppDbConn.createObjectStore(dbTable.name,{keyPath: dbTable.keypath});
+		}
+	});  
 };
 openRequest.onsuccess = function(e) {
-  console.log('running onsuccess');
+  //console.log('running onsuccess');
   $objAppDbConn = e.target.result;
-  console.log(e.target.result);
+  //console.log(e.target.result);
   //addItem();
 };
 openRequest.onerror = function(e) {
-  console.log('onerror!');
+  console.log('Error opening indexedDb!');
   console.dir(e);
 };
-
-function addItem() {
-  var transaction = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite');
-  var store = transaction.objectStore(strStoreName_Produce);
-  var item = {
-    name: 'banana',
-    price: '$2.99',
-    description: 'It is a purple banana!',
-    created: new Date().getTime()
-  };
-
- var request = store.add(item);
-
- request.onerror = function(e) {
-    console.log('Error', e.target.error.name);
-  };
-  request.onsuccess = function(e) {
-    console.log('Woot! Did it');
-  };
-}
 </script>
 
 <!-- Include Bootstrap CSS-->

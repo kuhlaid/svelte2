@@ -6,7 +6,7 @@
     Check if the user has an active session with a back-end API and save session.
 -->
 <script>
-    import { strStoreName_Produce, strStoreRawApiData, objOfflineStatus, strStoreAppSettings, strApiConfig_Produce, objAppDbConn } from './stores.js';
+    import { objOfflineStatus, objAppDbConn } from './stores.js';
     let strApiUrl; // this will be the read-only store promise we read from the database but do not change
     let strApiUrlReadable='';  // this is the prior URL value
     let objApiData=''; // this will hold any data we retrieve from the server API
@@ -15,12 +15,18 @@
     let strApiToken;
     let blnGetApiData;  // determine if we can make calls to the API or not (if we are offline)
     let strGetApiBtnClass='primary';
+    let selectdTable;
+    function btnSaveClick_ApiUrl() {
+        objApiData='';
+        putApiAddress();
+    }
 
-    function btnSaveClick_ApiUrl() {putApiAddress();}
     function getApiToken() {console.log("getApiToken");} // here get the API token we have stored in indexedDb in order to place API calls
 
     // here we first need to check the API tokens match so we send the token we have to the API
-    function btnGetApiDataClick() {
+    function btnGetApiDataClick(tableName) {
+        //console.log(tableName + " btnGetApiDataClick");
+        selectdTable=tableName; // we need to know the db table we will be saving to
         getApiToken();
         getApiData();
     }
@@ -60,7 +66,7 @@
     // save raw API data 
     function putRawApiData(objData){
         // parse the objData from the server; we are mainly looking for data and a data dictionary
-        var objectStore = $objAppDbConn.transaction([strStoreRawApiData], 'readwrite').objectStore(strStoreRawApiData);
+        var objectStore = $objAppDbConn.transaction(["RawData"], 'readwrite').objectStore("RawData");
         var request = objectStore.put(objData);
 
         request.onerror = function(e) {
@@ -68,11 +74,10 @@
         };
         request.onsuccess = function(e) {
             console.log('saved API data');
-            var db = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite').objectStore(strStoreName_Produce);
+            var db = $objAppDbConn.transaction([selectdTable], 'readwrite').objectStore(selectdTable);
             putApiData([objData.api.data], db, () => {});
             putApiConfig(objData.api.config);
         };
-        
     }
 
     // extract data fields from API data 
@@ -90,7 +95,7 @@
 
     // extract API config from API data 
     function putApiConfig(objData){
-        var objectStore = $objAppDbConn.transaction([strApiConfig_Produce], 'readwrite').objectStore(strApiConfig_Produce);
+        var objectStore = $objAppDbConn.transaction(["FormConfig"], 'readwrite').objectStore("FormConfig");
         var request = objectStore.put(objData);
 
         request.onerror = function(e) {
@@ -103,7 +108,7 @@
 
     // pull the API address from the local db
     function getApiAddress() {
-        var objectStore = $objAppDbConn.transaction([strStoreAppSettings], 'readwrite').objectStore(strStoreAppSettings);
+        var objectStore = $objAppDbConn.transaction(["AppSettings"], 'readwrite').objectStore("AppSettings");
         var request = objectStore.get('api_url');
 
         request.onerror = function(e) {
@@ -133,7 +138,7 @@
     // update the API address in the local db
     function putApiAddress() {
         var apiUrlSetting = { name: "api_url", value: strApiUrl };
-        var objectStore = $objAppDbConn.transaction([strStoreAppSettings], 'readwrite').objectStore(strStoreAppSettings);
+        var objectStore = $objAppDbConn.transaction(["AppSettings"], 'readwrite').objectStore("AppSettings");
         var request = objectStore.put(apiUrlSetting);
 
         request.onerror = function(e) {
@@ -150,7 +155,10 @@
 using the Laravel template at <a href="https://github.com/kuhlaid/laravel2020.03.31" target="_blank">https://github.com/kuhlaid/laravel2020.03.31</a>. Once you have cloned the Laravel GitHub code just mentioned and started the local Laravel server,
 you should be able to copy/enter the following URL into the server API address field to pull test API data from your local Laravel server (if your local Laravel host address is not 127.0.0.1:8000 simply substitute
 your host string in the following URL):<br/>
-<strong>http://127.0.0.1:8000/api/ProduceFormly</strong>
+<strong>
+http://127.0.0.1:8000/api/ProduceFormly<br/>
+http://127.0.0.1:8000/api/FrozenFormly
+</strong>
 </div>
 <div class="input-group input-group-sm mb-3">
   <div class="input-group-prepend">
@@ -158,8 +166,9 @@ your host string in the following URL):<br/>
   </div>
   <input type="text" class="form-control" aria-label="Server API URL" aria-describedby="inputGroup-sizing-sm" bind:value={strApiUrl} placeholder="Paste/Enter the server API address here" id="apiUrlInput"/>
 </div>
-<button on:click={btnSaveClick_ApiUrl} class="btn btn-primary" disabled={!strApiUrl}>Save the server API address and check for data from the API</button>
-<button on:click={btnGetApiDataClick} class="btn btn-{strGetApiBtnClass}" disabled={!blnGetApiData}>Get ProduceFormly data from the server API</button>
+<button on:click={btnSaveClick_ApiUrl} class="ml-2 btn btn-primary" disabled={!strApiUrl}>Save the server API address and check for data from the API</button>
+<button on:click={() => btnGetApiDataClick('Produce')} class="ml-2 btn btn-{strGetApiBtnClass}" disabled={!blnGetApiData}>Get produce items data from the server API</button>
+<button on:click={() => btnGetApiDataClick('Frozen')} class="ml-2 btn btn-{strGetApiBtnClass}" disabled={!blnGetApiData}>Get frozen items data from the server API</button>
 <div class="p-4 m-3 border border-solid">
 <h3>Data from the server API:</h3>
 {@html objApiData}

@@ -183,7 +183,8 @@ function serve(prodBuild=false){
 					});
 				}
 
-				// this function simply replaces text in our build files to set application settings from the .env file
+				// *************** DO NOT EDIT UNLESS YOU UNDERSTAND WHAT IT DOES ********************
+				// this function is important to replace constants in our build files to set application settings from the .env file
 				replace.sync({
 					files: [
 						'public/sw.js',
@@ -191,11 +192,11 @@ function serve(prodBuild=false){
 						'public/build/bundle.js',
 						'public/build/bundle.js.map'
 					],
-					from: [/__cVersion__/g, /OAUTH_CLIENT_ID/g, /OAUTH_CLIENT_SECRET/g],
-					to: [fileVersion, process.env.OAUTH_CLIENT_ID, process.env.OAUTH_CLIENT_SECRET],
+					from: [/__cVersion__/g, /__ARRAY_DB_TABLES__/g, /__INDEXEDDB_NAME__/g, /__ARRAY_DB_CORE_TABLES__/g],
+					to: [fileVersion, process.env.ARRAY_DB_TABLES, process.env.INDEXEDDB_NAME, process.env.ARRAY_DB_CORE_TABLES],
 				  });
+				// ***********************************************************************************
 
-				//console.log('terser me');
 				if (prodBuild) {
 					var code = fs.readFileSync("public/build/bundle.js", "utf8");
 					fs.writeFileSync("public/build/bundle.js", terser.minify(code).code, "utf8");

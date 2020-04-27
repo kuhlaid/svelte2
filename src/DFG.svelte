@@ -6,17 +6,21 @@ interesting JSON template transformer for mapping data to a template
 https://selecttransform.github.io/site/
 -->
 <script>
-  import { strStoreName_Produce, strApiConfig_Produce, objAppDbConn } from './stores.js';
+  import { objAppDbConn } from './stores.js';
   import { get } from "svelte/store";
   import { valuesForm, Field } from "svelte-formly";
-  //export let recordId;
-  const ssrecordId = sessionStorage.getItem("recordId");
-  let fieldConfigId='1';
+
+  const objRecord = JSON.parse(sessionStorage.getItem("objRecord"));
+  const ssrecordId = objRecord.uuid;
+  let fieldConfigId = objRecord.apiid;
   let fields;
   let fieldsRaw;  // for editing records
+  let tableName;
+
   // pull the dynamic form generation config from the local db
   function getFormFields() {
-      var objectStore = $objAppDbConn.transaction([strApiConfig_Produce], 'readonly').objectStore(strApiConfig_Produce);
+    console.log(fieldConfigId);
+      var objectStore = $objAppDbConn.transaction(["FormConfig"], 'readonly').objectStore("FormConfig");
       var request = objectStore.get(fieldConfigId);
 
       request.onerror = function(e) {
@@ -24,7 +28,8 @@ https://selecttransform.github.io/site/
       };
       request.onsuccess = function(e) {
           if (request.result.fields) {
-            if (ssrecordId!='') {
+            tableName = request.result.name;  // get the table name
+            if (ssrecordId) {
               console.log('buildForm edit entry'+ssrecordId);
               // edit form (for this we do not want to assign the fields constant until we have filled the values in the fields)
               fieldsRaw = JSON.parse(request.result.fields);
@@ -41,7 +46,7 @@ https://selecttransform.github.io/site/
 
   // retrieve record for editing
   function getRecord(){
-      var objectStore = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite').objectStore(strStoreName_Produce);
+      var objectStore = $objAppDbConn.transaction([tableName], 'readwrite').objectStore(tableName);
       var request = objectStore.get(ssrecordId);
 
       request.onerror = function(e) {
@@ -72,8 +77,8 @@ https://selecttransform.github.io/site/
   
     // simple $objAppDbConn connection
     function addItem() {
-        var transaction = $objAppDbConn.transaction([strStoreName_Produce], 'readwrite');
-        var store = transaction.objectStore(strStoreName_Produce);
+        var transaction = $objAppDbConn.transaction([tableName], 'readwrite');
+        var store = transaction.objectStore(tableName);
         var item = {
             uuid: uuidv1(),
             name: 'banana',

@@ -26,6 +26,11 @@ data configuration is used
 - need to determine the form config version to use when adding new records (need to save an app setting key=>value pair whenever an API is downloaded from the server or data is pushed so we know the latest version to use)
 
 ## Change log
+April 27, 2020
+- Moving the indexedDb table config out of the Svelte store to .env file to dynamically connect to the database tables our app is using. Adding a a second API
+set of data in order to test multiple data tables for adding and editing records. Adding a selection list for data tables to pull from on the data selection view. 
+Dynamically connecting to indexedDb tables based on a environment configuration instead of hard-coded table connections.
+
 April 25, 2020
 - Modifying the data table to respond to a user clicking a record row/cell in order to load the record details into the record edit form. Also modifying the dynamic form generator to fill the form with a record selected from the data table.
 
