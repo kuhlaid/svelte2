@@ -1,11 +1,11 @@
-<!--
+<script>
+/**
 @abstract This script is used to test the https://github.com/arabdevelop/svelte-formly
 module for generating dynamic forms within Svelte.
 
 interesting JSON template transformer for mapping data to a template
 https://selecttransform.github.io/site/
--->
-<script>
+*/
   import { objAppDbConn } from './stores.js';
   import { get } from "svelte/store";
   import { valuesForm, Field } from "svelte-formly";
