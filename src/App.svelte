@@ -1,4 +1,5 @@
-<!--
+<script>
+/**
 Pulling sample code from https://svelte.dev/examples#svelte-component
 
 March 25, 2020 - wpg
@@ -6,8 +7,7 @@ March 25, 2020 - wpg
 
 March 24, 2020 - wpg
 - tried to use the NavigationDrawer smelte component but it does not link to components from what I can tell
--->
-<script>
+*/
 	import { objOfflineStatus, objAppDbConn } from './stores.js';
 
 	import Visits from './Visits.svelte';
@@ -131,11 +131,9 @@ openRequest.onerror = function(e) {
 };
 </script>
 
-<!-- Include Bootstrap CSS-->
 <link rel='stylesheet' href='/bs4.4.1.css'>
 
 <div class="container">
-	<!--app navigation -->
 	<ul class="nav nav-tabs">
 	{#each options as option, i}
 	<li class="nav-item">
@@ -149,13 +147,11 @@ openRequest.onerror = function(e) {
     <div class="col-sm-12">
 		<div class="p-2">
 			<h1>{selected.page}</h1>
-			<!-- this is where our main content is placed -->
 			<svelte:component this={selected.component}/>
 		</div>
     </div>
   </div>
 
-	<!-- Simple network status notification -->
 	<div class="alert {$objOfflineStatus.bsAlert} p-1 m-2 mt-4">Network status: <strong class="{$objOfflineStatus.statusColor}">{$objOfflineStatus.status}</strong></div>
 
   <div class="alert alert-light p-2">(__cVersion__) The source code for this app can be found at <a href="https://github.com/kuhlaid/svelte2" target="_blank">https://github.com/kuhlaid/svelte2</a></div>
