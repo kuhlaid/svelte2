@@ -1,11 +1,11 @@
-<!--
+<script>
+/**
     @abstract This component will be used to update the URL of the server-side API to connect to.
     We need to read the localstorage strApiUrl value and copy to a writable variable.
 
     @todo Check the session token with the API server.
     Check if the user has an active session with a back-end API and save session.
--->
-<script>
+*/
     import { objOfflineStatus, objAppDbConn } from './stores.js';
     let strApiUrl; // this will be the read-only store promise we read from the database but do not change
     let strApiUrlReadable='';  // this is the prior URL value
