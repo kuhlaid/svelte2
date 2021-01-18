@@ -1,12 +1,12 @@
-<!-- 
+<script>
+/**
     April 6, 2020
     - testing svelte-table
 
 Things to think about
 - Could the row and column configurations be specified and sent by the server API along with the data and stored in the local database? 
 This may allow for dynamically generated lists from local storage?
--->
-<script>
+*/
   import { objAppDbConn } from './stores.js';
   //import SvelteTable from "svelte-table";   // used to build our data table
   import ProduceList from "./ProduceList.tpl.svelte";   // pulling a list of data from our indexeddb data table
@@ -119,15 +119,10 @@ This may allow for dynamically generated lists from local storage?
         headerClass: " text-left active "
     }
     ];
-
-
-    
 </script> 
 <div class='m-1'>This component was added to test the svelte-table plugin. 
 <br/>
 @todo - work on styling the table and pulling data from the local database where data is pulled from the server
 </div>
-<!-- <SvelteTable columns="{columns}" rows="{rows}" classNameTable="table table-hover table-bordered"></SvelteTable>
-<SvelteTable columns="{columns}" rows="{rows}" classNameTable="table table-hover table-bordered"></SvelteTable> -->
 <hr/>
 <ProduceList/>
