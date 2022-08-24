@@ -1,3 +1,7 @@
+# About
+
+[stale code] This code is out of date with regards to modules so you will need to update/replace modules in the package.json file to get this code working, but some of the inner workings in the code might be useful to hack apart. Good luck. I do not have plans to update this code as I have shifted my focus to Next.js.
+
 ## Getting started
 The easiest way to begin using this code is to simply fork it to your personal GitHub project space, log into https://zeit.co/ (create an account using your GitHub account) then use the Import Project option, select your forked version of this repository, then deploy it so you can see the app in action. As for working with this code locally, for newbies this app is built from Node.js so will want to have the latest version of Node.js installed along with npm.
 
